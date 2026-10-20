@@ -1,3 +1,6 @@
+mod passage;
+
 fn main() {
-    println!("Hello, world!");
+    println!("type these words out bwaahahwbabwhahwabhwaahahhahh:\n");
+    passage::show_passage();
 }
