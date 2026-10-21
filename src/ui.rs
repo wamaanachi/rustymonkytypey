@@ -1,7 +1,7 @@
 use ratatui::{Frame, widgets::{Block, Paragraph},};
 
-pub fn draw(frame: &mut frame){
-    let widget = Paragraph::new("Type below\n\ Esc: quit")
+pub fn draw(frame: &mut Frame){
+    let widget = Paragraph::new("Type below\n\nEsc: quit")
         .block(Block::bordered().title("tuipe"));
 
     frame.render_widget(widget, frame.area());
