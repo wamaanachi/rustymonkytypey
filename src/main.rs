@@ -1,6 +1,9 @@
 mod passage;
+mod app;
+mod ui;
 
-fn main() {
-    println!("type these words out bwaahahwbabwhahwabhwaahahhahh:\n");
-    passage::show_passage();
+fn main() -> std::io::Result<()> {
+    ratatui::run(app::run)
 }
+
+// i should prolly make a mod file 

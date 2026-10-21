@@ -4,7 +4,8 @@ pub const WORDS: &[&str] = &["umm", "sure", "ig", "lowk", "idk", "what",
                "cool", "i", "am", "gonna", "stop", "now",
                "i", "want", "it", "that", "way", "tell","me",
                "why", "aint", "nothing", "but", "a", "heartache",
-               "mistake", "never", "hear", "say" ];
+               "mistake", "never", "hear", "say", "hackatime", "is", "bad",
+               "bruhh", "working", "or", "nah", "acting", "weird"];
 
 // we need like 43 - 45 words 
 // but ill add more words in the future
