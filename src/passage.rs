@@ -12,7 +12,7 @@ pub const WORDS: &[&str] = &["umm", "sure", "ig", "lowk", "idk", "what",
 
 use rand::seq::SliceRandom;
 
-pub fn show_passage(){
+pub fn show_passage() -> String{
     let mut words = WORDS.to_vec();
     words.shuffle(&mut rand::rng());
 
@@ -21,7 +21,8 @@ pub fn show_passage(){
 
     let words_per_line = words.len().div_ceil(3);
 
-    for line in words.chunks(words_per_line){
-        println!("{}", line.join(" "));
-    }
+    words.chunks(words_per_line)
+        .map(|line| line.join(" "))
+        .collect::<Vec<_>>()
+        .join("\n")
 }
