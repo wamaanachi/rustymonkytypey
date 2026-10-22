@@ -12,16 +12,24 @@ pub fn passage_line(passage: &str, input: &str) -> Line<'static> {
 
     // bruhh thisa shi is real weird
     for expected in passage.chars(){
-        let color = match typed.next(){
-            Some(actual) if actual == expected => Color::Green,
-            Some(_) => Color::Red,
-            None => Color::DarkGray,
+        let (characters, color) = match typed.next(){
+            Some(actual) if actual == expected => (actual, Color::Green),
+            Some(actual) => (actual, Color::Red),
+            None => (expected, Color::DarkGray),
         };
 
+        // now like we are gonna show what theyt typed and where they are at yk
         letters.push(Span::styled(
-            expected.to_string(),
+            characters.to_string(),
             Style::default().fg(color),
         ));
+    }
+
+    for extra in typed {
+        letters.push(Span::styled(
+            extra.to_string(),
+            Style::default().fg(Color::Red),
+        ))
     }
 
     Line::from(letters)
