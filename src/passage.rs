@@ -24,5 +24,5 @@ pub fn show_passage() -> String{
     words.chunks(words_per_line)
         .map(|line| line.join(" "))
         .collect::<Vec<_>>()
-        .join("\n")
+        .join(" ")
 }
