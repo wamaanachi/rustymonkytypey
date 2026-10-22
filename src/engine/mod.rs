@@ -34,6 +34,14 @@ impl TypingState {
         }
         self.started_at.get_or_insert(std::time::Instant::now());
         self.typed_stuff[self.current_word_idx].push(c);
+
+        let is_last_word = self.current_word_idx + 1 == self.target_words.len();
+        let reached_end = self.typed_stuff[self.current_word_idx].len()
+            >= self.target_words[self.current_word_idx].len();
+
+        if is_last_word && reached_end {
+            self.set_finished();
+        }
     }
 
     pub fn on_backspace(&mut self) {
@@ -45,5 +53,103 @@ impl TypingState {
         } else if self.current_word_idx > 0 {
             self.current_word_idx -= 1;
         }
+    }
+
+    pub fn on_space(&mut self) {
+        if self.is_finished() {
+            return;
+        }
+
+        if !self.typed_stuff[self.current_word_idx].is_empty() {
+            self.current_word_idx += 1;
+        }
+
+        if self.current_word_idx >= self.target_words.len() {
+            self.set_finished();
+        }
+    }
+
+    fn set_finished(&mut self) {
+        self.ended_at = Some(std::time::Instant::now());
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::engine::TypingState;
+
+    #[test]
+    fn space_increments_the_word() {
+        let words = vec!["hello".to_string(), "world".to_string()];
+        let mut state = TypingState::new(words);
+
+        state.on_char('h');
+        state.on_char('e');
+        state.on_space();
+
+        assert_eq!(state.current_word_idx, 1);
+
+        //also let's test if pressing space again will not increment current_word_idx
+        state.on_space();
+        assert_eq!(state.current_word_idx, 1);
+
+        //now, let's test if adding words, and then pressing space increments to 2
+        state.on_char('w');
+        state.on_char('o');
+        state.on_space();
+
+        assert_eq!(state.current_word_idx, 2);
+    }
+
+    #[test]
+    fn space_without_letter_does_nothing() {
+        let words = vec!["hello".to_string(), "world".to_string()];
+        let mut state = TypingState::new(words);
+
+        state.on_char('h');
+        state.on_char('e');
+        state.on_space();
+
+        // let's test if pressing space again will not increment current_word_idx
+        state.on_space();
+        assert_eq!(state.current_word_idx, 1);
+
+        //now, let's test if adding words, and then pressing space increments to 2
+        state.on_char('w');
+        state.on_char('o');
+        state.on_space();
+
+        assert_eq!(state.current_word_idx, 2);
+    }
+    #[test]
+    fn space_sets_end_if_length_exceeds() {
+        let words = vec!["hello".to_string(), "world".to_string()];
+        let mut state = TypingState::new(words);
+
+        state.on_char('h');
+        state.on_char('e');
+        state.on_space();
+
+        //now, let's test if adding words, and then pressing space increments to 2
+        state.on_char('w');
+        state.on_char('o');
+        state.on_space();
+
+        assert_eq!(state.current_word_idx, 2);
+        assert!(state.ended_at.is_some());
+    }
+
+    #[test]
+    fn on_char_sets_end() {
+        let words = vec!["hello".to_string()];
+        let mut state = TypingState::new(words);
+
+        state.on_char('h');
+        state.on_char('e');
+        state.on_char('l');
+        state.on_char('l');
+        state.on_char('o');
+
+        assert!(state.ended_at.is_some());
     }
 }
