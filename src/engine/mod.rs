@@ -42,8 +42,7 @@ impl TypingState {
         }
         if !self.typed_stuff[self.current_word_idx].is_empty() {
             self.typed_stuff[self.current_word_idx].pop();
-        }
-        if self.current_word_idx > 0 {
+        } else if self.current_word_idx > 0 {
             self.current_word_idx -= 1;
         }
     }
