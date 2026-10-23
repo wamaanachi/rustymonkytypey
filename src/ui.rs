@@ -1,4 +1,5 @@
 use ratatui::{Frame, widgets::{Block, Paragraph, Wrap},};
+use ratatui::layout::Alignment;
 
 pub fn draw(frame: &mut Frame, passage: &str, input: &str){
 
@@ -15,7 +16,9 @@ pub fn draw(frame: &mut Frame, passage: &str, input: &str){
         .block(Block::bordered().title(format!(
             "tuipe | {completed}/{total} words | Esc: quit"
         )))
+        .alignment(Alignment::Center)
         .wrap(Wrap { trim: true });
 
     frame.render_widget(widget, frame.area());
 }
+ 

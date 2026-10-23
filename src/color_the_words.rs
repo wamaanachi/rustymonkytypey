@@ -1,17 +1,25 @@
 use ratatui::{
     style::{Color, Style},
-    text::{Line, Span},    
+    text::{Line, Span, Text},    
 };
 
 // so this will see if the letters you typed are the letters which needed to by typed
 // yk will be like highlighting those if correct/wrong
 
-pub fn passage_line(passage: &str, input: &str) -> Line<'static> {
+pub fn passage_line(passage: &str, input: &str) -> Text<'static> {
     let mut typed = input.chars();
     let mut letters = Vec::new();
-
+    let mut lines = Vec::new();
     // bruhh thisa shi is real weird
     for expected in passage.chars(){
+
+        if expected == '\n' {
+            lines.push(Line::from(letters));
+            letters = Vec::new();
+
+            typed.next();
+            continue;
+        }
         let (characters, color) = match typed.next(){
             Some(actual) if actual == expected => (actual, Color::Green),
             Some(actual) => (actual, Color::Red),
@@ -32,5 +40,6 @@ pub fn passage_line(passage: &str, input: &str) -> Line<'static> {
         ))
     }
 
-    Line::from(letters)
+    lines.push(Line::from(letters));
+    Text::from(lines)
 }
