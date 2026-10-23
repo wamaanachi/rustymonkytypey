@@ -6,8 +6,16 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
     let passage = crate::passage::show_passage();
 
     let mut input = String::new();
+    let mut show_results = false;
     loop {
-        terminal.draw(|frame| crate::ui::draw(frame, &passage, &input))?;
+        terminal.draw(|frame|{
+            if show_results {
+                crate::results::draw(frame);
+            }
+            else {
+                crate::ui::draw(frame, &passage, &input);
+            }
+        })?;
 
         let Event::Key(key) = event::read()? else {
             continue;
@@ -16,7 +24,12 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
         if key.kind == KeyEventKind::Press {
             match key.code {
                 KeyCode::Esc => return Ok(()),
-                KeyCode::Char(c) => input.push(c),
+                KeyCode::Enterb => {
+                    show_results = !show_results;
+                }
+                KeyCode::Char(c) if !show_results => {
+                    input.push(c);
+                }
                 KeyCode::Backspace => {         // will this even work lol
                     input.pop();
                 }
