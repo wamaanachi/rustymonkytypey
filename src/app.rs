@@ -24,13 +24,13 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
         if key.kind == KeyEventKind::Press {
             match key.code {
                 KeyCode::Esc => return Ok(()),
-                KeyCode::Enterb => {
+                KeyCode::Enter => {
                     show_results = !show_results;
                 }
                 KeyCode::Char(c) if !show_results => {
                     input.push(c);
                 }
-                KeyCode::Backspace => {         // will this even work lol
+                KeyCode::Backspace if !show_results => {         // will this even work lol
                     input.pop();
                 }
                 _ => {}

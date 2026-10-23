@@ -1,6 +1,6 @@
 use ratatui::{
     Frame,
-    layout::Alignmet,
+    layout::Alignment,
     widgets::{Block, Paragraph},
 };
 
@@ -20,7 +20,7 @@ Enter: back to typing
 Esc: quit";
 
 let widget = Paragraph::new(text)
-    .alignmet(Alignmet::Center)
+    .alignment(Alignment::Center)
     .block(Block::bordered().title("tuipe | results"));
 
     frame.render_widget(widget, frame.area());
