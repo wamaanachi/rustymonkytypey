@@ -21,4 +21,3 @@ pub fn draw(frame: &mut Frame, passage: &str, input: &str, theme: &crate::theme:
 
 frame.render_widget(widget, frame.area());
 }
- 
