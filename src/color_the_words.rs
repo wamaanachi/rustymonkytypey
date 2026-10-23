@@ -10,6 +10,7 @@ pub fn passage_line(passage: &str, input: &str) -> Text<'static> {
     let mut typed = input.chars();
     let mut letters = Vec::new();
     let mut lines = Vec::new();
+    let mut caret_shown =  false;
     // bruhh thisa shi is real weird
     for expected in passage.chars(){
 
@@ -26,10 +27,17 @@ pub fn passage_line(passage: &str, input: &str) -> Text<'static> {
             None => (expected, Color::DarkGray),
         };
 
+        let mut style = Style::default().fg(color);
+
+        if color == Color::DarkGray && !caret_shown {
+            style = style.bg(Color::Yellow).fg(Color::Black);// might changev it to white idk
+            caret_shown = true;
+        }
+
         // now like we are gonna show what theyt typed and where they are at yk
         letters.push(Span::styled(
             characters.to_string(),
-            Style::default().fg(color),
+            style,
         ));
     }
 
