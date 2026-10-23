@@ -1,3 +1,5 @@
+pub mod analytics;
+
 pub struct TypingState {
     pub target_words: Vec<Vec<char>>, //collection of chars(word) in another vector(collection of words)
     pub current_word_idx: usize,      //idx of current word
