@@ -6,7 +6,7 @@ use ratatui::{
 // so this will see if the letters you typed are the letters which needed to by typed
 // yk will be like highlighting those if correct/wrong
 
-pub fn passage_line(passage: &str, input: &str) -> Text<'static> {
+pub fn passage_line(passage: &str, input: &str, theme: &crate::theme::Theme,) -> Text<'static> {
     let mut typed = input.chars();
     let mut letters = Vec::new();
     let mut lines = Vec::new();

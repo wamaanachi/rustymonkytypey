@@ -7,13 +7,14 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
 
     let mut input = String::new();
     let mut show_results = false;
+    let theme = crate::theme::Theme::default();
     loop {
         terminal.draw(|frame|{
             if show_results {
                 crate::results::draw(frame);
             }
             else {
-                crate::ui::draw(frame, &passage, &input);
+                crate::ui::draw(frame, &passage, &input, &theme);
             }
         })?;
 

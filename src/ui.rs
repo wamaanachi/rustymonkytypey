@@ -1,7 +1,7 @@
 use ratatui::{Frame, widgets::{Block, Paragraph, Wrap},};
 use ratatui::layout::Alignment;
 
-pub fn draw(frame: &mut Frame, passage: &str, input: &str){
+pub fn draw(frame: &mut Frame, passage: &str, input: &str, theme: &crate::theme::Theme,){
 
     let total = passage.split_whitespace().count();
 
@@ -12,13 +12,13 @@ pub fn draw(frame: &mut Frame, passage: &str, input: &str){
 
     let completed = completed.min(total);
 
-    let widget = Paragraph::new(crate::color_the_words::passage_line(passage, input))
+    let widget = Paragraph::new(crate::color_the_words::passage_line(passage, input, theme))
         .block(Block::bordered().title(format!(
             "tuipe | {completed}/{total} words | Esc: quit"
         )))
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: true });
 
-    frame.render_widget(widget, frame.area());
+frame.render_widget(widget, frame.area());
 }
  
