@@ -15,6 +15,7 @@ use rand::seq::SliceRandom;
 pub fn show_passage() -> String{
     let mut words = WORDS.to_vec();
     words.shuffle(&mut rand::rng());
+    words.truncate(25);
 
     // so we will divide the words into 3 lines
     // because umm monkeytype does it this way
