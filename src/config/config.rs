@@ -14,3 +14,9 @@ pub(crate) struct Mode {
     pub(crate) title: String,
 
 }
+
+pub(crate) fn load_config() {
+    todo!(
+        "load config from the config file"
+    )
+}
