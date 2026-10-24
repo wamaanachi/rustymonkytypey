@@ -5,29 +5,31 @@ use ratatui::{
     text::Line,
 };
 
-pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize){
-    let text = format!(
-        // sighs
-        "Border: {}\n\
-        Correct:  {}\n\
-        Incorrect: {}\n\
-        Untyped: {}\n\
-        Caret background: {}\n\
-        Caret text: {}\n\
-        Text: {}\n\
-        Background: {}",
-        // is this the worst code ever? loll
-        theme.border,
-        theme.correct,
-        theme.incorrect,
-        theme.untyped,
-        theme.caret_background,
-        theme.caret_text,
-        theme.text,
-        theme.background,
-    );
-// ummn this is to put that > things beofre the options of themes you would be able to choose
-// yk how it will be used, i aint explaining
+pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize) {
+    let text = {
+        let border: Color = theme.border;
+        let correct: Color = theme.correct;
+        let incorrect: Color = theme.incorrect;
+        let untyped: Color = theme.untyped;
+        let caret_bg: Color = theme.caret_background;
+        let caret_txt: Color = theme.caret_text;
+        let text: Color = theme.text;
+        let bg: Color = theme.background;
+
+        format!(
+            // sighs
+            "Border: {border}\n\
+            Correct:  {correct}\n\
+            Incorrect: {incorrect}\n\
+            Untyped: {untyped}\n\
+            Caret background: {caret_bg}\n\
+            Caret text: {caret_txt}\n\
+            Text: {text}\n\
+            Background: {bg}",
+        )
+    };
+    // ummn this is to put that > things beofre the options of themes you would be able to choose
+    // yk how it will be used, i aint explaining
 
     let text: Vec<Line> = text 
         .lines()
