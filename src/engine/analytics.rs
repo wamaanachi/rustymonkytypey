@@ -2,7 +2,34 @@ use std::time::{Duration, Instant};
 
 use crate::engine::TypingState;
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct FinalStats {
+    pub net_wpm: f64,
+    pub raw_wpm: f64,
+    pub accuracy: f64,
+    pub time_seconds: f64,
+    pub correct_chars: usize,
+    pub total_chars: usize,
+}
+
 impl TypingState {
+    pub fn stats(&self) -> FinalStats {
+        let net_wpm = self.net_wpm();
+        let raw_wpm = self.raw_wpm();
+        let accuracy = self.accuracy();
+        let time_seconds = self.elapsed().as_secs_f64();
+        let (correct_chars, total_chars) = self.char_count();
+
+        FinalStats {
+            net_wpm,
+            raw_wpm,
+            accuracy,
+            time_seconds,
+            correct_chars,
+            total_chars,
+        }
+    }
+
     pub fn char_count(&self) -> (usize, usize) {
         let mut total = 0;
         let mut correct = 0;
@@ -63,6 +90,9 @@ impl TypingState {
 
     pub fn accuracy(&self) -> f64 {
         let (correct, total) = self.char_count();
+        if total == 0 {
+            return 0.0;
+        }
         (correct as f64 / total as f64) * 100.0
     }
 }
@@ -175,5 +205,13 @@ mod test {
 
         let wpm = state.net_wpm();
         assert!(wpm == 0.0);
+    }
+
+    #[test]
+    fn accuracy_never_returns_nan() {
+        let words = vec!["hello".to_string(), "world".to_string()];
+        let state = TypingState::new(words);
+
+        assert!(!state.accuracy().is_nan());
     }
 }

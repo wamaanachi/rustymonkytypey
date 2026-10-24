@@ -23,7 +23,7 @@ impl TypingState {
         }
     }
 
-    fn is_finished(&mut self) -> bool {
+    fn is_finished(&self) -> bool {
         if self.ended_at.is_some() {
             return true;
         }
@@ -72,9 +72,9 @@ impl TypingState {
     }
 
     pub fn reset(&mut self, new_words: Vec<String>) {
-        self.typed_stuff.clear();
-        self.current_word_idx = 0;
         self.target_words = new_words.into_iter().map(|w| w.chars().collect()).collect();
+        self.typed_stuff = vec![Vec::new(); self.target_words.len()];
+        self.current_word_idx = 0;
         self.started_at = None;
         self.ended_at = None;
     }
@@ -183,8 +183,22 @@ mod test {
         state.reset(vec!["slop".to_string()]);
 
         assert_eq!(state.target_words[0], vec!['s', 'l', 'o', 'p']);
+        assert_eq!(state.current_word_idx, 0);
         assert!(state.started_at.is_none());
         assert!(state.ended_at.is_none());
-        assert!(state.typed_stuff.is_empty());
+    }
+
+    #[test]
+    fn typing_after_test_does_not_panic_raaah() {
+        let words = vec!["hello".to_string()];
+        let mut state = TypingState::new(words);
+
+        state.on_char('w');
+        state.on_char('0');
+        state.on_char('d');
+
+        state.reset(vec!["world".to_string()]);
+
+        state.on_char('w');
     }
 }
