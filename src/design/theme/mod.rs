@@ -2,7 +2,7 @@ pub(crate) mod helper;
 
 use ratatui::style::Color;
 
-pub fn change_color(color: &mut Color, forward: bool){
+pub fn change_color(color: &mut Color, forward: bool) {
     let colors = [
         Color::Black,
         Color::DarkGray,
@@ -19,8 +19,7 @@ pub fn change_color(color: &mut Color, forward: bool){
     // wamwam
     let next = if forward {
         (current + 1) % colors.len()
-    }
-    else {
+    } else {
         (current + colors.len() - 1) % colors.len()
     };
 
