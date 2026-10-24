@@ -35,6 +35,7 @@ fn get_app_dir() -> Result<PathBuf, u8> {
 
 fn get_config_dir() -> Result<PathBuf, u8> {
     let dirs: BaseDirs = get_base_dir()?;
+    let conf_base_dir: PathBuf = dirs.config_dir().to_path_buf();
     
-    return Ok(dirs.config_dir().to_path_buf());
+    return Ok(conf_base_dir.join(APP_NAME));
 }
