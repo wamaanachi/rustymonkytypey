@@ -1,6 +1,7 @@
 use ratatui::style::Color;
 
 // yk this is gonna be a fully customizable color thingy, user would be able to pick and change EVERY COLOR in the tui
+#[derive(Debug, Clone)]
 pub struct Theme {
 // gonna be br making a lot of options
 pub border: Color,

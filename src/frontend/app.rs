@@ -1,27 +1,26 @@
 use std::io;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use crate::config::structs::theme::Theme;
 
-pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
-
-    let passage = crate::passage::show_passage();
+pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
+    let passage = crate::frontend::passage::show_passage();
 
     let mut input = String::new();
     let mut show_results = false;
     let mut show_themes = false;
-    let mut theme = crate::theme::Theme::default();
+    let mut theme = Theme::default();
     let mut selected_theme = 0;
+
     loop {
-        terminal.draw(|frame|{
+        terminal.draw(|frame| {
             if show_themes {
-                crate::themes::draw(frame, &theme, selected_theme);
+                crate::design::theme::helper::draw(frame, &theme, selected_theme);
+            } else if show_results {
+                crate::frontend::results::draw(frame, &theme);
+            } else {
+                crate::frontend::ui::draw(frame, &passage, &input, &theme);
             }
-            else if show_results{
-                crate::results::draw(frame, &theme);
-            }
-            else {
-                crate::ui::draw(frame, &passage, &input, &theme);
-            }
-    })?;
+        })?;
 
         let Event::Key(key) = event::read()? else {
             continue;
@@ -35,8 +34,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
                 KeyCode::Esc => {
                     if show_themes {
                         show_themes = false;
-                    }
-                    else {
+                    } else {
                         return Ok(());
                     }
                 }
@@ -52,7 +50,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
                 // cause we gonna let them like go up n down in the themes page
                 KeyCode::Up if show_themes => {
                     if selected_theme > 0 {
-                        selected_theme -=1;
+                        selected_theme -= 1;
                     }
                 }
                 KeyCode::Down if show_themes  => {
@@ -61,16 +59,16 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
                     }
                 }
                 KeyCode::Left | KeyCode::Right if show_themes => {
-
                     if selected_theme == 0 {
                         theme = if theme.name == "Default"{
-                            crate::theme::Theme::gruvbox()
-                        } 
+                            Theme::gruvbox()
+                        }
                         else {
-                            crate::theme::Theme::default()
+                            Theme::default()
                         };
                     }
                     else {
+
                     // just the same things in theme.rs matching it up
                     let color = match selected_theme {
                         1 => &mut theme.border,
@@ -82,12 +80,12 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
                         7 => &mut theme.text,
                         _ => &mut theme.background,
                     };
-                
-                    crate::theme::change_color(color, key.code == KeyCode::Right);
 
-                    theme.name  = "Custom";
-                    }
+                    crate::design::theme::change_color(color, key.code == KeyCode::Right);
+
+                    theme.name = "Custom";
                 }
+            }
                 _ => {}
             }
         }

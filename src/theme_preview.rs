@@ -6,11 +6,11 @@ use ratatui::{
     widgets::{Block, Paragraph, Wrap},
 };
 // the usual code 
-pub fn draw(frame: &mut Frame, area: Rect, theme: &crate::theme::Theme){
-        let mut text = crate::color_the_words::passage_line(
+pub fn draw(frame: &mut Frame, area: Rect, theme: &crate::config::structs::theme::Theme){
+        let mut text = crate::design::color_words::passage_line(
             "correct wrong untyped",
             "correct xxxxx ",
-            theme,
+            theme.clone(),
         );
 
         text.lines.push(Line::from(""));

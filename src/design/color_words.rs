@@ -3,17 +3,20 @@ use ratatui::{
     text::{Line, Span, Text},    
 };
 
+
+use crate::config::structs::theme::Theme;
+
 // so this will see if the letters you typed are the letters which needed to by typed
 // yk will be like highlighting those if correct/wrong
-
-pub fn passage_line(passage: &str, input: &str, theme: &crate::theme::Theme,) -> Text<'static> {
+pub fn passage_line(passage: &str, input: &str, theme: Theme) -> Text<'static> {
     let mut typed = input.chars();
     let mut letters = Vec::new();
     let mut lines = Vec::new();
-    let mut caret_shown =  false;
-    // bruhh thisa shi is real weird
-    for expected in passage.chars(){
+    let mut caret_shown = false;
 
+
+    // bruhh thisa shi is real weird
+    for expected in passage.chars() {
         if expected == '\n' {
             lines.push(Line::from(letters));
             letters = Vec::new();
@@ -42,7 +45,7 @@ pub fn passage_line(passage: &str, input: &str, theme: &crate::theme::Theme,) ->
         }
 
         if is_untyped && !caret_shown {
-            style = style.bg(theme.caret_background).fg(theme.caret_text);// might changev it to white idk
+            style = style.bg(theme.caret_background).fg(theme.caret_text); // might changev it to white idk
             caret_shown = true;
         }
 

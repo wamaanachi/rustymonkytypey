@@ -6,7 +6,7 @@ use ratatui::{
     layout::{Constraint, Direction, Layout}
 };
 
-pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize){
+pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, selected: usize){
         // umm tryna make it a lil responsive idk if it'll work
     let direction = if frame.area().width >= 80 {
         Direction::Horizontal

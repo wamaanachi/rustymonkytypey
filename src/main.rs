@@ -1,13 +1,16 @@
-mod passage;
-mod app;
-mod ui;
-mod color_the_words;
-mod results;
-mod theme;
-mod themes;
-mod theme_preview;
+use clap::Parser;
+use crate::cli::cli::CliArgs;
+
+pub mod frontend;
+pub mod config;
+pub mod cli;
+pub mod design;
 pub mod engine;
 
+mod theme_preview;
+
 fn main() -> std::io::Result<()> {
-    ratatui::run(app::run)
+    let _args = CliArgs::parse();
+
+    ratatui::run(frontend::app::run)
 }
