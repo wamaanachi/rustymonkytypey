@@ -18,7 +18,7 @@ pub fn draw(frame: &mut Frame, passage: &str, input: &str, theme: &crate::theme:
         .block(Block::bordered()
         .border_style(Style::default().fg(theme.border))
         .title(format!(
-            "tuipe | {completed}/{total} words | Esc: quit"
+            "tuipe | {completed}/{total} words | F2: themes | Esc: quit"
         )))
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: true });
