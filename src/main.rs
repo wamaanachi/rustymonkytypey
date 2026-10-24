@@ -5,9 +5,10 @@ pub mod frontend;
 pub mod config;
 pub mod cli;
 pub mod design;
+pub mod engine;
 
 fn main() -> std::io::Result<()> {
-    let args = CliArgs::parse();
+    let _args = CliArgs::parse();
 
     ratatui::run(frontend::app::run)
 }
