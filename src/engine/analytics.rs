@@ -167,4 +167,13 @@ mod test {
 
         assert!(state.raw_wpm() > state.net_wpm());
     }
+
+    #[test]
+    fn test_zero_elapsed_time() {
+        let words = vec!["hello".to_string(), "world".to_string()];
+        let state = TypingState::new(words);
+
+        let wpm = state.net_wpm();
+        assert!(wpm == 0.0);
+    }
 }
