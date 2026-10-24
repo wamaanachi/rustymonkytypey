@@ -1,11 +1,10 @@
-use crate::design::theme::Theme;
-
-
 use ratatui::{
     style::Style,
     text::{Line, Span, Text},    
 };
 
+
+use crate::config::structs::theme::Theme;
 
 // so this will see if the letters you typed are the letters which needed to by typed
 // yk will be like highlighting those if correct/wrong
