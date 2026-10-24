@@ -1,5 +1,4 @@
 use clap::{Parser, Subcommand};
-use crate::config::config::{Config, Theme};
 
 #[derive(Parser, Clone, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -23,14 +22,11 @@ pub(crate) struct CliArgs {
 
     /// Show history
     #[arg(
-        long="history"
+        long = "history"
     )]
     pub(crate) history: bool,
-
-    /// Set number of words
-    #[command(subcommand)]
-    pub(crate) words: Option<WordOptions>,
 }
+
 
 #[derive(Subcommand, Clone, Debug)]
 enum ConfigChange {
