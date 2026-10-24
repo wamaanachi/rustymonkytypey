@@ -25,7 +25,7 @@ fn get_app_dir() -> Result<PathBuf, u8> {
     // macOS:   /Users/user/Library/Application Support
     let data_dir: &Path = dirs.data_local_dir();
 
-    let app_dir: PathBuf = data_dir.join("app");
+    let app_dir: PathBuf = data_dir.join(APP_NAME);
     if !app_dir.exists() {
         std::fs::create_dir_all(app_dir.clone()).unwrap();
     }
