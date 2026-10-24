@@ -1,0 +1,57 @@
+use ratatui::{
+    Frame,
+    style::Style,
+    widgets::{Block, Paragraph},
+    text::Line,
+};
+use ratatui::style::Color;
+
+use crate::config::structs::theme::Theme;
+
+pub fn draw(frame: &mut Frame, theme: &Theme, selected: usize) {
+    let text = {
+        let border: Color = theme.border;
+        let correct: Color = theme.correct;
+        let incorrect: Color = theme.incorrect;
+        let untyped: Color = theme.untyped;
+        let caret_bg: Color = theme.caret_background;
+        let caret_txt: Color = theme.caret_text;
+        let text: Color = theme.text;
+        let bg: Color = theme.background;
+
+        // sighs
+        format!("\
+            Border           : {border}\n\
+            Correct          : {correct}\n\
+            Incorrect        : {incorrect}\n\
+            Untyped          : {untyped}\n\
+            Caret background : {caret_bg}\n\
+            Caret text       : {caret_txt}\n\
+            Text             : {text}\n\
+            Background       : {bg}",
+        )
+    };
+    // ummn this is to put that > things beofre the options of themes you would be able to choose
+    // yk how it will be used, i aint explaining
+
+    // changed to lines cuz text = text.smth sounds wrong for some reason
+    // and you enumerate lines anyways so
+    let lines: Vec<Line> = text
+        .lines()
+        .enumerate()
+        .map(|(index, row)| {
+            let marker = if index == selected { "> " } else { "  " };
+            Line::from(format!("{marker}{row}"))
+        })
+        .collect();
+
+    let widget = Paragraph::new(lines)
+        .style(Style::default().fg(theme.text).bg(theme.background))
+        .block(
+            Block::bordered()
+                .border_style(Style::default().fg(theme.border))
+                .title("tuipe | Up/Down: select | Left/Right: colour | Esc: back")
+        );
+
+    frame.render_widget(widget, frame.area());
+}
