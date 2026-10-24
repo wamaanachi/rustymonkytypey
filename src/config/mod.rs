@@ -1,0 +1,40 @@
+pub mod config;
+
+use std::path::{Path, PathBuf};
+use directories::BaseDirs;
+
+pub(crate) const APP_NAME: &str = "Wamaanachi/Tuipe";
+
+
+fn get_base_dir() -> Result<BaseDirs, u8> {
+    let dirs = BaseDirs::new();
+
+    if dirs.is_some() {
+        Ok(dirs.unwrap())
+    } else {
+        Err(0)
+    }
+}
+
+
+fn get_app_dir() -> Result<PathBuf, u8> {
+    let dirs: BaseDirs = get_base_dir()?;
+
+    // Linux:   /home/user/.config
+    // Windows: C:\Users\user\AppData\Local
+    // macOS:   /Users/user/Library/Application Support
+    let data_dir: &Path = dirs.data_local_dir();
+
+    let app_dir: PathBuf = data_dir.join("app");
+    if !app_dir.exists() {
+        std::fs::create_dir_all(app_dir.clone()).unwrap();
+    }
+
+    Ok(app_dir)
+}
+
+fn get_config_dir() -> Result<PathBuf, u8> {
+    let dirs: BaseDirs = get_base_dir()?;
+    
+    return Ok(dirs.config_dir().to_path_buf());
+}
