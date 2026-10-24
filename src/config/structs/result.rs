@@ -12,6 +12,6 @@ pub(crate) struct Result {
 pub(crate) struct Metadata {
     pub(crate) time: String,
     pub(crate) words: Vec<String>,
-    
+
     pub(crate) theme: Option<String>,
 }
