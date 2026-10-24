@@ -6,9 +6,7 @@ use ratatui::{
 };
 use ratatui::style::Color;
 
-
-use crate::design::theme::Theme;
-
+use crate::config::structs::theme::Theme;
 
 pub fn draw(frame: &mut Frame, theme: Theme, selected: usize) {
     let text = {
