@@ -1,4 +1,6 @@
 use clap::Parser;
+use ratatui;
+
 use crate::cli::cli::CliArgs;
 
 pub mod frontend;
