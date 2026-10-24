@@ -1,5 +1,5 @@
 use ratatui::{
-    style::Style,
+    style::{Modifier, Style},
     text::{Line, Span, Text},    
 };
 
@@ -24,6 +24,11 @@ pub fn passage_line(passage: &str, input: &str, theme: &crate::theme::Theme,) ->
 
         let is_untyped = typed.as_str().is_empty();
 
+        let is_wrong= typed
+            .clone()
+            .next()
+            .is_some_and(|actual| actual != expected);
+
         let (characters, color) = match typed.next(){
             Some(actual) if actual == expected => (actual, theme.correct),
             Some(actual) => (actual, theme.incorrect),
@@ -31,6 +36,10 @@ pub fn passage_line(passage: &str, input: &str, theme: &crate::theme::Theme,) ->
         };
 
         let mut style = Style::default().fg(color);
+
+        if is_wrong {
+            style = style.add_modifier(Modifier::UNDERLINED);
+        }
 
         if is_untyped && !caret_shown {
             style = style.bg(theme.caret_background).fg(theme.caret_text);// might changev it to white idk
@@ -47,7 +56,9 @@ pub fn passage_line(passage: &str, input: &str, theme: &crate::theme::Theme,) ->
     for extra in typed {
         letters.push(Span::styled(
             extra.to_string(),
-            Style::default().fg(theme.incorrect),
+            Style::default()
+                .fg(theme.incorrect)
+                .add_modifier(Modifier::UNDERLINED),
         ))
     }
 
