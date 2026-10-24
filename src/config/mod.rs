@@ -1,4 +1,5 @@
 pub mod config;
+pub mod structs;
 
 use std::path::{Path, PathBuf};
 use directories::BaseDirs;
