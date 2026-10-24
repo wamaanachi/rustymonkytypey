@@ -5,6 +5,7 @@ pub(crate) struct Result {
 
     pub(crate) correct   : usize,
     pub(crate) incorrect : usize,
+    pub(crate) metadata  : Metadata
 }
 
 pub(crate) struct Metadata {
