@@ -9,8 +9,17 @@ pub(crate) struct CliArgs {
     config_change: Option<ConfigChange>,
 
     /// Theme Options
-    #[command(subcommand)]
-    pub(crate) theme: Option<ThemeActions>,
+    #[arg(
+        long = "theme"
+    )]
+    pub(crate) theme: Option<String>,
+
+    /// Set number of words
+    #[arg(
+        long = "words"
+    )]
+    pub(crate) words: Option<usize>,
+
 
     /// Show history
     #[arg(
