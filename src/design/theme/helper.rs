@@ -8,7 +8,7 @@ use ratatui::style::Color;
 
 use crate::config::structs::theme::Theme;
 
-pub fn draw(frame: &mut Frame, theme: Theme, selected: usize) {
+pub fn draw(frame: &mut Frame, theme: &Theme, selected: usize) {
     let text = {
         let border: Color = theme.border;
         let correct: Color = theme.correct;
@@ -34,22 +34,24 @@ pub fn draw(frame: &mut Frame, theme: Theme, selected: usize) {
     // ummn this is to put that > things beofre the options of themes you would be able to choose
     // yk how it will be used, i aint explaining
 
-    let text: Vec<Line> = text
+    // changed to lines cuz text = text.smth sounds wrong for some reason
+    // and you enumerate lines anyways so
+    let lines: Vec<Line> = text
         .lines()
         .enumerate()
         .map(|(index, row)| {
             let marker = if index == selected { "> " } else { "  " };
-
             Line::from(format!("{marker}{row}"))
         })
         .collect();
 
-    let widget = Paragraph::new(text)
+    let widget = Paragraph::new(lines)
         .style(Style::default().fg(theme.text).bg(theme.background))
         .block(
             Block::bordered()
                 .border_style(Style::default().fg(theme.border))
                 .title("tuipe | Up/Down: select | Left/Right: colour | Esc: back")
         );
+
     frame.render_widget(widget, frame.area());
 }
