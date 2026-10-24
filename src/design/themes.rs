@@ -4,6 +4,7 @@ use ratatui::{
     widgets::{Block, Paragraph},
     text::Line,
 };
+use ratatui::style::Color;
 
 pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize) {
     let text = {
@@ -18,23 +19,23 @@ pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize) {
 
         format!(
             // sighs
-            "Border: {border}\n\
-            Correct:  {correct}\n\
-            Incorrect: {incorrect}\n\
-            Untyped: {untyped}\n\
+            "Border:          {border}\n\
+            Correct:          {correct}\n\
+            Incorrect:        {incorrect}\n\
+            Untyped:          {untyped}\n\
             Caret background: {caret_bg}\n\
-            Caret text: {caret_txt}\n\
-            Text: {text}\n\
-            Background: {bg}",
+            Caret text:       {caret_txt}\n\
+            Text:             {text}\n\
+            Background:       {bg}",
         )
     };
     // ummn this is to put that > things beofre the options of themes you would be able to choose
     // yk how it will be used, i aint explaining
 
-    let text: Vec<Line> = text 
+    let text: Vec<Line> = text
         .lines()
         .enumerate()
-        .map(|(index, row)|{
+        .map(|(index, row)| {
             let marker = if index == selected { "> " } else { "  " };
 
             Line::from(format!("{marker}{row}"))

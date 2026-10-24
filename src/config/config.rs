@@ -6,12 +6,12 @@ pub(crate) struct Config {
 pub(crate) struct Theme {
     pub(crate) title: String,
     pub(crate) description: Option<String>,
-    pub(crate) border: Color,
-    pub(crate) correct: Color,
-    pub(crate) incorrect: Color,
-    pub(crate) caret_background: Color,
-    pub(crate) caret_text: Color,
-    pub(crate) background: Color,
+    // pub(crate) border: Color,
+    // pub(crate) correct: Color,
+    // pub(crate) incorrect: Color,
+    // pub(crate) caret_background: Color,
+    // pub(crate) caret_text: Color,
+    // pub(crate) background: Color,
 }
 
 pub(crate) struct Mode {

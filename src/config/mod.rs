@@ -3,7 +3,8 @@ pub mod config;
 use std::path::{Path, PathBuf};
 use directories::BaseDirs;
 
-pub(crate) const APP_NAME: &str = "Wamaanachi/Tuipe";
+pub(crate) const GROUP_NAME: &str = "Wamaanachi";
+pub(crate) const APP_NAME: &str = "RustyMonkeyTypey";
 
 
 fn get_base_dir() -> Result<BaseDirs, u8> {
@@ -17,15 +18,16 @@ fn get_base_dir() -> Result<BaseDirs, u8> {
 }
 
 
+// returns like
 fn get_app_dir() -> Result<PathBuf, u8> {
     let dirs: BaseDirs = get_base_dir()?;
 
-    // Linux:   /home/user/.config
+    // Linux:   /home/user/.local/share
     // Windows: C:\Users\user\AppData\Local
     // macOS:   /Users/user/Library/Application Support
     let data_dir: &Path = dirs.data_local_dir();
 
-    let app_dir: PathBuf = data_dir.join(APP_NAME);
+    let app_dir: PathBuf = data_dir.join(GROUP_NAME).join(APP_NAME);
     if !app_dir.exists() {
         std::fs::create_dir_all(app_dir.clone()).unwrap();
     }
@@ -37,5 +39,5 @@ fn get_config_dir() -> Result<PathBuf, u8> {
     let dirs: BaseDirs = get_base_dir()?;
     let conf_base_dir: PathBuf = dirs.config_dir().to_path_buf();
     
-    return Ok(conf_base_dir.join(APP_NAME));
+    Ok(conf_base_dir.join(GROUP_NAME).join(APP_NAME))
 }

@@ -6,37 +6,33 @@ use crate::config::config::{Config, Theme};
 pub(crate) struct CliArgs {
     /// Change Config
     #[command(subcommand)]
-    config_change: ConfigChange,
+    config_change: Option<ConfigChange>,
 
     /// Theme Options
-    #[arg(
-        long = "theme"
-    )]
-    pub(crate) theme: Option<String>,
+    #[command(subcommand)]
+    pub(crate) theme: Option<ThemeActions>,
 
     /// Show history
     #[arg(
-        long = "history"
+        long="history"
     )]
     pub(crate) history: bool,
 
     /// Set number of words
-    #[arg(
-        long = "words"
-    )]
-    pub(crate) words: Option<u8>,
+    #[command(subcommand)]
+    pub(crate) words: Option<WordOptions>,
 }
 
 #[derive(Subcommand, Clone, Debug)]
 enum ConfigChange {
     Theme {
         #[command(subcommand)]
-        theme: ThemeActions
+        theme: Option<ThemeActions>
     },
 
     Words {
         #[command(subcommand)]
-        words: Words,
+        words: Option<WordOptions>,
     }
 }
 
@@ -47,13 +43,13 @@ enum ThemeActions {
     },
 
     Set {
-        theme_name: String,
+        theme_name: Option<String>,
     }
 }
 
 #[derive(Subcommand, Clone, Debug)]
-enum Words {
+enum WordOptions {
     Set {
-        number_of_words: u8,
+        number_of_words: Option<u8>,
     }
 }

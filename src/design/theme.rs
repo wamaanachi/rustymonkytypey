@@ -2,16 +2,16 @@ use ratatui::style::Color;
 
 // yk this is gonna be a fully customizable color thingy, user would be able to pick and change EVERY COLOR in the tui
 pub struct Theme {
-// gonna be br making a lot of options
-pub border: Color,
-pub correct: Color,
-pub incorrect: Color,
-pub untyped: Color,
-pub caret_background: Color,
-pub caret_text: Color,
-pub text: Color,
-pub background: Color,
-// might add more idk
+    // gonna be br making a lot of options
+    pub border: Color,
+    pub correct: Color,
+    pub incorrect: Color,
+    pub untyped: Color,
+    pub caret_background: Color,
+    pub caret_text: Color,
+    pub text: Color,
+    pub background: Color,
+    // might add more idk
 }
 
 impl Theme {
