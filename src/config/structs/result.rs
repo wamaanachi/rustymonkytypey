@@ -8,6 +8,7 @@ pub(crate) struct Result {
     pub(crate) metadata  : Metadata
 }
 
+
 pub(crate) struct Metadata {
     pub(crate) time: String,
     pub(crate) words: Vec<String>,
