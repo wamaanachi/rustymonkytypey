@@ -1,5 +1,5 @@
-mod app;
-mod color_the_words;
-mod passage;
-mod results;
-mod ui;
+pub(crate) mod app;
+pub(crate) mod passage;
+pub(crate) mod results;
+pub(crate) mod ui;
+
