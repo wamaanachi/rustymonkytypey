@@ -9,10 +9,11 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
     let mut show_results = false;
     let mut show_themes = false;
     let theme = crate::theme::Theme::default();
+    let mut selected_theme = 0;
     loop {
         terminal.draw(|frame|{
             if show_themes {
-                crate::themes::draw(frame, &theme);
+                crate::themes::draw(frame, &theme, selected_theme);
             }
             else if show_results{
                 crate::results::draw(frame, &theme);
@@ -47,6 +48,17 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
                 }
                 KeyCode::Backspace if !show_results && !show_themes => {         // will this even work lol
                     input.pop();
+                }
+                // cause we gonna let them like go up n down in the themes page
+                KeyCode::Up if show_themes => {
+                    if selected_theme > 0 {
+                        selected_theme -=1;
+                    }
+                }
+                KeyCode::Down if show_themes  => {
+                    if selected_theme < 7 {
+                        selected_theme += 1;
+                    }
                 }
                 _ => {}
             }

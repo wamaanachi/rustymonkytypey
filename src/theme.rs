@@ -15,7 +15,7 @@ pub background: Color,
 }
 
 impl Theme {
-    pub fn default() -> Self{
+    pub fn default() -> Self {
         Self{
             // these are the colors i already had lol
             border: Color::White,

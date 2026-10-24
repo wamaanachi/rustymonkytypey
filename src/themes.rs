@@ -2,9 +2,10 @@ use ratatui::{
     Frame,
     style::Style,
     widgets::{Block, Paragraph},
+    text::Line,
 };
 
-pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme){
+pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize){
     let text = format!(
         // sighs
         "Border: {}\n\
@@ -25,13 +26,25 @@ pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme){
         theme.text,
         theme.background,
     );
+// ummn this is to put that > things beofre the options of themes you would be able to choose
+// yk how it will be used, i aint explaining
+
+    let text: Vec<Line> = text 
+        .lines()
+        .enumerate()
+        .map(|(index, row)|{
+            let marker = if index == selected { "> " } else { "  " };
+
+            Line::from(format!("{marker}{row}"))
+        })
+        .collect();
 
     let widget = Paragraph::new(text)
         .style(Style::default().fg(theme.text).bg(theme.background))
         .block(
             Block::bordered()
                 .border_style(Style::default().fg(theme.border))
-                .title("tuipe | themes | F2 / Esc:  back")
+                .title("tuipe | themes | Up/Down: select | F2 / Esc:  back")
         );
     frame.render_widget(widget, frame.area());
 }
