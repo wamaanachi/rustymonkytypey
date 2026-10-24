@@ -8,7 +8,8 @@ use ratatui::{
 pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize){
     let text = format!(
         // sighs
-        "Border: {}\n\
+       "Preset: {}\n\
+        Border: {}\n\
         Correct:  {}\n\
         Incorrect: {}\n\
         Untyped: {}\n\
@@ -17,6 +18,7 @@ pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize){
         Text: {}\n\
         Background: {}",
         // is this the worst code ever? loll
+        theme.name,
         theme.border,
         theme.correct,
         theme.incorrect,

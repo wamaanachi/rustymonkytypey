@@ -56,25 +56,37 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
                     }
                 }
                 KeyCode::Down if show_themes  => {
-                    if selected_theme < 7 {
+                    if selected_theme < 8 {
                         selected_theme += 1;
                     }
                 }
                 KeyCode::Left | KeyCode::Right if show_themes => {
 
+                    if selected_theme == 0 {
+                        theme = if theme.name == "Default"{
+                            crate::theme::Theme::gruvbox()
+                        } 
+                        else {
+                            crate::theme::Theme::default()
+                        };
+                    }
+                    else {
                     // just the same things in theme.rs matching it up
                     let color = match selected_theme {
-                        0 => &mut theme.border,
-                        1 => &mut theme.correct,
-                        2 => &mut theme.incorrect,
-                        3 => &mut theme.untyped,
-                        4 => &mut theme.caret_background,
-                        5 => &mut theme.caret_text,
-                        6 => &mut theme.text,
+                        1 => &mut theme.border,
+                        2 => &mut theme.correct,
+                        3 => &mut theme.incorrect,
+                        4 => &mut theme.untyped,
+                        5 => &mut theme.caret_background,
+                        6 => &mut theme.caret_text,
+                        7 => &mut theme.text,
                         _ => &mut theme.background,
                     };
-
+                
                     crate::theme::change_color(color, key.code == KeyCode::Right);
+
+                    theme.name  = "Custom";
+                    }
                 }
                 _ => {}
             }
