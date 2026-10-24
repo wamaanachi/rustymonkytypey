@@ -44,7 +44,7 @@ pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize){
         .block(
             Block::bordered()
                 .border_style(Style::default().fg(theme.border))
-                .title("tuipe | themes | Up/Down: select | F2 / Esc:  back")
+                .title("tuipe | Up/Down: select | Left/Right: colour | Esc: back")
         );
     frame.render_widget(widget, frame.area());
 }

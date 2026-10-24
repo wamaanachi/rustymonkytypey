@@ -8,7 +8,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
     let mut input = String::new();
     let mut show_results = false;
     let mut show_themes = false;
-    let theme = crate::theme::Theme::default();
+    let mut theme = crate::theme::Theme::default();
     let mut selected_theme = 0;
     loop {
         terminal.draw(|frame|{
@@ -59,6 +59,22 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()>{
                     if selected_theme < 7 {
                         selected_theme += 1;
                     }
+                }
+                KeyCode::Left | KeyCode::Right if show_themes => {
+
+                    // just the same things in theme.rs matching it up
+                    let color = match selected_theme {
+                        0 => &mut theme.border,
+                        1 => &mut theme.correct,
+                        2 => &mut theme.incorrect,
+                        3 => &mut theme.untyped,
+                        4 => &mut theme.caret_background,
+                        5 => &mut theme.caret_text,
+                        6 => &mut theme.text,
+                        _ => &mut theme.background,
+                    };
+
+                    crate::theme::change_color(color, key.code == KeyCode::Right);
                 }
                 _ => {}
             }
