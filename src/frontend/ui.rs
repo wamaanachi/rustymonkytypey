@@ -1,27 +1,27 @@
 use ratatui::{Frame, widgets::{Block, Paragraph, Wrap},};
 use ratatui::layout::Alignment;
 use ratatui::style::Style;
+use crate::config::structs::theme::Theme;
 
-pub fn draw(frame: &mut Frame, passage: &str, input: &str, theme: &crate::theme::Theme,){
-
+pub fn draw(frame: &mut Frame, passage: &str, input: &str, theme: &Theme,) {
     let total = passage.split_whitespace().count();
 
-    let completed = input 
+    let completed = input
         .split_inclusive(' ')
         .filter(|word| word.ends_with(' ') && !word.trim().is_empty())
         .count();
 
     let completed = completed.min(total);
 
-    let widget = Paragraph::new(crate::color_the_words::passage_line(passage, input, theme))
+    let widget = Paragraph::new(crate::design::color_words::passage_line(passage, input, theme.clone()))
         .style(Style::default().fg(theme.text).bg(theme.background))
         .block(Block::bordered()
-        .border_style(Style::default().fg(theme.border))
-        .title(format!(
-            "tuipe | {completed}/{total} words | F2: themes | Esc: quit"
-        )))
+            .border_style(Style::default().fg(theme.border))
+            .title(format!(
+                "tuipe | {completed}/{total} words | F2: themes | Esc: quit"
+            )))
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: true });
-       
-frame.render_widget(widget, frame.area());
+
+    frame.render_widget(widget, frame.area());
 }
