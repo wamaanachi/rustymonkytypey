@@ -3,9 +3,24 @@ use ratatui::{
     style::Style,
     widgets::{Block, Paragraph},
     text::Line,
+    layout::{Constraint, Direction, Layout}
 };
 
 pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize){
+        // umm tryna make it a lil responsive idk if it'll work
+    let direction = if frame.area().width >= 80 {
+        Direction::Horizontal
+    }
+    else {
+        Direction::Vertical
+    };
+    let areas = Layout::default()
+        .direction(direction)
+        .constraints([
+            Constraint::Percentage(60),
+            Constraint::Percentage(40), // should work now i think
+        ])
+        .split(frame.area());
     let text = format!(
         // sighs
        "Preset: {}\n\
@@ -48,5 +63,6 @@ pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, selected: usize){
                 .border_style(Style::default().fg(theme.border))
                 .title("tuipe | Up/Down: select | Left/Right: colour | Esc: back")
         );
-    frame.render_widget(widget, frame.area());
+    frame.render_widget(widget, areas[0]);
+    crate::theme_preview::draw(frame, areas[1], theme);
 }
