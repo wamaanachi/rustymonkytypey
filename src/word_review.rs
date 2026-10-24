@@ -27,7 +27,17 @@ pub fn find_mistakes(passage: &str, input: &str) -> Vec<(String, String)>{
 }
 
 pub fn draw(frame: &mut Frame, theme: &crate::theme::Theme, passage: &str, input: &str,){
-    let mistakes = [
-        ("against", )
-    ]
-}
+  
+    let mut mistakes = find_mistakes(passage, input);
+    let mut rows = Vec::new();
+
+    for (expected, typed) in mistakes {
+        // mehhh, this makes the column that shows all the words you spelt wrong blehhhhh
+        rows.push(Row::new([
+            Cell::from(expected),
+            
+        ]))
+    }
+        
+    
+
