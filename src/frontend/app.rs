@@ -1,5 +1,6 @@
 use crate::{config::structs::theme::Theme, engine::TypingState};
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use ratatui::widgets::TableState;
 use std::io;
 
 pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
@@ -15,6 +16,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
     let mut show_themes = false;
     let mut theme = Theme::default();
     let mut selected_theme = 0;
+    let mut review_state = TableState::default();
 
     loop {
         let is_finished = state.is_finished();
@@ -25,7 +27,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
             } 
             else if show_review{
                 let input = state.to_input_string();
-                crate::word_review::draw(frame, &theme, &passage, &input);
+                crate::word_review::draw(frame, &theme, &passage, &input, &mut review_state,);
             }
             else if is_finished {
                 crate::frontend::results::draw(frame, &theme, &state.stats());
@@ -46,6 +48,17 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                 }
                 KeyCode::Char('r') if is_finished && !show_themes => {
                     show_review = !show_review;
+
+                    if show_review {
+                        review_state = TableState::default();
+                            // im lowk so bored bruhhh
+                        let input = state.to_input_string();
+                        let mistakes = crate::word_review::find_mistakes(&passage, &input);
+
+                        if !mistakes.is_empty(){
+                            review_state.select(Some(0));
+                        }
+                    }
                 }
                 KeyCode::Esc => {
                     if show_review {
@@ -137,6 +150,22 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                     let new_words: Vec<String> =
                         passage.split_whitespace().map(|s| s.to_string()).collect();
                     state.reset(new_words);
+                } 
+                KeyCode::Up if show_review => {
+                    if let Some(selected) = review_state.selected(){
+                        review_state.select(Some(selected.saturating_sub(1)));
+                    }
+                }
+
+                KeyCode::Down if show_review => {
+                    let input = state.to_input_string();
+                    let total = crate::word_review::find_mistakes(&passage, &input).len();
+
+                    if let Some(selected) = review_state.selected(){
+                        if selected + 1 < total {
+                            review_state.select(Some(selected + 1));
+                        }
+                    }
                 }
                 _ => {}
             }
