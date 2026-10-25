@@ -61,6 +61,15 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                 }
                 KeyCode::Char(c) if !show_results && !show_themes => {
                     input.push(c);
+                        // its basically js taking the user automatically to the results page when they reach the 25 word mark, so need to press the key to see the resilts, lol
+                    if c == ' ' {
+                        let completed = input.split_whitespace().count();
+                        let total = passage.split_whitespace().count();
+                    
+                    if completed >= total {
+                        show_results = true;
+                    }
+                }
                 }
                 KeyCode::Backspace if !show_results && !show_themes => {         // will this even work lol
                     input.pop();
