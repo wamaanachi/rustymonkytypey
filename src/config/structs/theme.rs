@@ -49,3 +49,48 @@ impl Theme {
         }
     }
 }
+
+
+// this is to get themes from json file
+#[derive(Debug, Serialize, Deserialize)]
+pub(crate) struct ThemeJson {
+    pub name             : String,
+    pub border           : HashMap<String, u8>,
+    pub correct          : HashMap<String, u8>,
+    pub incorrect        : HashMap<String, u8>,
+    pub untyped          : HashMap<String, u8>,
+    pub caret_background : HashMap<String, u8>,
+    pub caret_text       : HashMap<String, u8>,
+    pub text             : HashMap<String, u8>,
+    pub background       : HashMap<String, u8>,
+}
+
+impl ThemeJson {
+    fn check_color(color: HashMap<String, u8>) -> bool {
+        if color.is_empty() || color.len() != 3 {
+            return false;
+        }
+
+        true
+    }
+
+    pub(crate) fn new(
+        name             : String,
+        border           : HashMap<String, u8>,
+        correct          : HashMap<String, u8>,
+        incorrect        : HashMap<String, u8>,
+        untyped          : HashMap<String, u8>,
+        caret_background : HashMap<String, u8>,
+        caret_text       : HashMap<String, u8>,
+        text             : HashMap<String, u8>,
+        background       : HashMap<String, u8>,
+    ) -> Self {
+        let default: bool;
+
+        let default_theme = Theme::default();
+
+        todo!(
+            "finish ts"
+        )
+    }
+}
