@@ -37,7 +37,7 @@ impl TypingState {
         self.started_at.get_or_insert(std::time::Instant::now());
         self.typed_stuff[self.current_word_idx].push(c);
 
-        let is_last_word = self.current_word_idx + 1 == self.target_words.len();
+        let is_last_word = self.current_word_idx + 1 >= self.target_words.len();
         let reached_end = self.typed_stuff[self.current_word_idx].len()
             >= self.target_words[self.current_word_idx].len();
 
@@ -62,12 +62,13 @@ impl TypingState {
             return;
         }
 
-        if !self.typed_stuff[self.current_word_idx].is_empty() {
-            self.current_word_idx += 1;
+        if self.current_word_idx + 1 >= self.target_words.len() {
+            self.set_finished();
+            return;
         }
 
-        if self.current_word_idx >= self.target_words.len() {
-            self.set_finished();
+        if !self.typed_stuff[self.current_word_idx].is_empty() {
+            self.current_word_idx += 1;
         }
     }
 
