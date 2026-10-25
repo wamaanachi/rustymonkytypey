@@ -13,12 +13,22 @@ pub fn draw(frame: &mut Frame, passage: &str, input: &str, theme: &Theme,) {
 
     let completed = completed.min(total);
 
-    let widget = Paragraph::new(crate::design::color_words::passage_line(passage, input, theme.clone()))
+        let mut text = crate::design::color_words::passage_line(passage, input, theme.clone(),);
+
+    text.lines.insert(0, ratatui::text::Line::from(""));
+
+    text.lines.insert(
+        0,
+        ratatui::text::Line::from("Left/Right: choose before typing | Tab: restart"),
+    );
+text.lines.insert(0, crate::word_options::draw(total, theme));
+
+    let widget = Paragraph::new(text)
         .style(Style::default().fg(theme.text).bg(theme.background))
         .block(Block::bordered()
             .border_style(Style::default().fg(theme.border))
             .title(format!(
-                "tuipe | {completed}/{total} words | F2: themes | Esc: quit"
+                "tuipe | {completed}/{total} words | F2: themes | Esc: quit | Tab: restart"
             )))
         .alignment(Alignment::Center)
         .wrap(Wrap { trim: true });

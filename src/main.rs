@@ -6,6 +6,7 @@ pub mod config;
 pub mod cli;
 pub mod design;
 pub mod engine;
+mod word_options;
 mod word_review;
 
 mod theme_preview;
