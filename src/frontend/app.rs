@@ -127,10 +127,14 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                 }
                 KeyCode::Left | KeyCode::Right if show_themes => {
                     if selected_theme == 0 {
-                        theme = if theme.name == "Default" {
-                            Theme::gruvbox()
-                        } else {
-                            Theme::default()
+                        theme = match (theme.name, key.code){
+                            // yeah there might be some better way of doing this, but thy not just keep it simple.
+                            ("Default", KeyCode::Right) => Theme::gruvbox(),
+                            ("Gruvbox", KeyCode::Right) => Theme::dracula(),
+                            ("Dracula", KeyCode::Left) => Theme::gruvbox(),
+                            ("Gruvbox", KeyCode::Left) => Theme::default(),
+                            ("Default", KeyCode::Left) => Theme::dracula(),
+                            _ => Theme::default(),
                         };
                     } else {
                         // just the same things in theme.rs matching it up
