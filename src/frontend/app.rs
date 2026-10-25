@@ -3,7 +3,7 @@ use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use crate::config::structs::theme::Theme;
 
 pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
-    let passage = crate::frontend::passage::show_passage();
+    let mut passage = crate::frontend::passage::show_passage();
 
     let mut input = String::new();
     let mut show_results = false;
@@ -48,6 +48,13 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                     } else {
                         return Ok(());
                     }
+                }
+                KeyCode::Tab if !show_themes => {
+                    passage = crate::frontend::passage::show_passage();
+                    input.clear();
+
+                    show_results = false;
+                    show_review = false;
                 }
                 KeyCode::Enter if !show_themes && !show_review => {
                     show_results = !show_results;
