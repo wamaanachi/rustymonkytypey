@@ -6,14 +6,14 @@ use ratatui::{
     layout::{Constraint, Direction, Layout}
 };
 
-pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, selected: usize){
-        // umm tryna make it a lil responsive idk if it'll work
-    let direction = if frame.area().width >= 80 {
+pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, selected: usize) {
+    // umm tryna make it a lil responsive idk if it'll work
+    let direction = if frame.area().width >= frame.area().height {
         Direction::Horizontal
-    }
-    else {
+    } else {
         Direction::Vertical
     };
+
     let areas = Layout::default()
         .direction(direction)
         .constraints([
@@ -21,9 +21,10 @@ pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, sel
             Constraint::Percentage(40), // should work now i think
         ])
         .split(frame.area());
+
     let text = format!(
         // sighs
-       "Preset: {}\n\
+        "Preset: {}\n\
         Border: {}\n\
         Correct:  {}\n\
         Incorrect: {}\n\
@@ -43,13 +44,13 @@ pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, sel
         theme.text,
         theme.background,
     );
-// ummn this is to put that > things beofre the options of themes you would be able to choose
-// yk how it will be used, i aint explaining
+    // ummn this is to put that > things beofre the options of themes you would be able to choose
+    // yk how it will be used, i aint explaining
 
-    let text: Vec<Line> = text 
+    let text: Vec<Line> = text
         .lines()
         .enumerate()
-        .map(|(index, row)|{
+        .map(|(index, row)| {
             let marker = if index == selected { "> " } else { "  " };
 
             Line::from(format!("{marker}{row}"))
