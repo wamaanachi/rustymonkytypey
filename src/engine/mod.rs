@@ -1,11 +1,18 @@
 pub mod analytics;
 
+///Represents the central state of application.. like from idle, to active to finished..
+///
+///Handles input buffering, live timing metrics and everything as well.
 pub struct TypingState {
+    /// Target words are split into individual chars for better unicode comparisions
     pub target_words: Vec<Vec<char>>, //collection of chars(word) in another vector(collection of words)
-    pub current_word_idx: usize,      //idx of current word
-    pub typed_stuff: Vec<Vec<char>>,  //stuff typed by user
+    /// Pointer to the word currently being typed by the user.
+    pub current_word_idx: usize,
+    /// User input history, mirroring the target words structure.
+    pub typed_stuff: Vec<Vec<char>>,
     pub started_at: Option<std::time::Instant>,
     pub ended_at: Option<std::time::Instant>,
+    /// Second-by-second WPM snapshots for graph rendering.
     pub wpm_history: Vec<u64>,
     pub last_sample_time: Option<std::time::Instant>,
 }
