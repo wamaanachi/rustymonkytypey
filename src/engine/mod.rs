@@ -23,7 +23,7 @@ impl TypingState {
         }
     }
 
-    fn is_finished(&self) -> bool {
+    pub fn is_finished(&self) -> bool {
         if self.ended_at.is_some() {
             return true;
         }
@@ -77,6 +77,24 @@ impl TypingState {
         self.current_word_idx = 0;
         self.started_at = None;
         self.ended_at = None;
+    }
+
+    pub fn to_input_string(&self) -> String {
+        if self.typed_stuff.is_empty() {
+            return String::new();
+        }
+
+        let max_idx = self
+            .current_word_idx
+            .min(self.typed_stuff.len().saturating_sub(1));
+
+        let active_words = &self.typed_stuff[..=max_idx];
+
+        active_words
+            .iter()
+            .map(|wc| wc.iter().collect::<String>())
+            .collect::<Vec<String>>()
+            .join(" ")
     }
 
     fn set_finished(&mut self) {
