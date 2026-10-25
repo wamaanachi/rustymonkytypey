@@ -3,8 +3,12 @@ use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use crate::config::structs::theme::Theme;
 
 pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
-    let mut passage = crate::frontend::passage::show_passage();
 
+    let mut selected_count: usize =  1;
+    let mut started =  false;
+    let mut passage = crate::frontend::passage::show_passage(
+        crate::word_options::COUNTS[selected_count],
+    );
     let mut input = String::new();
     let mut show_results = false;
     let mut show_review = false;
@@ -50,7 +54,10 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                     }
                 }
                 KeyCode::Tab if !show_themes => {
-                    passage = crate::frontend::passage::show_passage();
+                    passage = crate::frontend::passage::show_passage(
+                        crate::word_options::COUNTS[selected_count],
+                    );
+                    started = false;
                     input.clear();
 
                     show_results = false;
@@ -60,6 +67,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                     show_results = !show_results;
                 }
                 KeyCode::Char(c) if !show_results && !show_themes => {
+                    started = true;
                     input.push(c);
                         // its basically js taking the user automatically to the results page when they reach the 25 word mark, so need to press the key to see the resilts, lol
                     if c == ' ' {
@@ -112,6 +120,19 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
 
                     theme.name = "Custom";
                 }
+            }
+
+            KeyCode::Left | KeyCode::Right if !show_themes && !show_results &&!show_review && !started => {
+                if key.code == KeyCode::Left {
+                    selected_count = selected_count.saturating_sub(1);
+                }
+                else {
+                    selected_count = (selected_count + 1).min(3);
+                }
+
+                passage = crate::frontend::passage::show_passage(
+                 crate::word_options::COUNTS[selected_count],   
+                );
             }
                 _ => {}
             }

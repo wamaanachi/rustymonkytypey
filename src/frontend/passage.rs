@@ -1,6 +1,6 @@
 use rand::seq::SliceRandom;
 
-pub fn show_passage() -> String{
+pub fn show_passage(count: usize) -> String{
     
     let json = include_str!("../../data/english.json");
     // its the json reader that i js added
@@ -15,7 +15,7 @@ pub fn show_passage() -> String{
         .collect();
 
     words.shuffle(&mut rand::rng());
-    words.truncate(25);
+    words.truncate(count);
 
     // so we will divide the words into 3 lines
     // because umm monkeytype does it this way

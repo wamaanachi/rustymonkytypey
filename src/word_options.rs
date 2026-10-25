@@ -3,12 +3,12 @@ use ratatui::{
     text::{Line, Span},
 };
 
-pub const Counts: [usize; 4]  = [15, 25, 40, 50];
+pub const COUNTS: [usize; 4]  = [15, 25, 40, 50];
 
 pub fn draw(selected: usize, theme: &crate::config::structs::theme::Theme)
     -> Line<'static>{
         
-        let mut parts = vec![Span::raw["words: "]];
+        let mut parts = vec![Span::raw("words: ")];
 
         for count in COUNTS {
             let mut style = Style::default().fg(theme.untyped);
