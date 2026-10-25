@@ -6,6 +6,8 @@ pub struct TypingState {
     pub typed_stuff: Vec<Vec<char>>,  //stuff typed by user
     pub started_at: Option<std::time::Instant>,
     pub ended_at: Option<std::time::Instant>,
+    pub wpm_history: Vec<u64>,
+    pub last_sample_time: Option<std::time::Instant>,
 }
 
 impl TypingState {
@@ -20,10 +22,12 @@ impl TypingState {
             typed_stuff: vec![Vec::new(); word_count],
             started_at: None,
             ended_at: None,
+            wpm_history: Vec::new(),
+            last_sample_time: None,
         }
     }
 
-    fn is_finished(&self) -> bool {
+    pub fn is_finished(&self) -> bool {
         if self.ended_at.is_some() {
             return true;
         }
@@ -37,10 +41,11 @@ impl TypingState {
         self.started_at.get_or_insert(std::time::Instant::now());
         self.typed_stuff[self.current_word_idx].push(c);
 
-        let is_last_word = self.current_word_idx + 1 == self.target_words.len();
+        let is_last_word = self.current_word_idx + 1 >= self.target_words.len();
         let reached_end = self.typed_stuff[self.current_word_idx].len()
             >= self.target_words[self.current_word_idx].len();
 
+        self.maybe_record_wpm();
         if is_last_word && reached_end {
             self.set_finished();
         }
@@ -62,13 +67,16 @@ impl TypingState {
             return;
         }
 
+        if self.current_word_idx + 1 >= self.target_words.len() {
+            self.set_finished();
+            return;
+        }
+
         if !self.typed_stuff[self.current_word_idx].is_empty() {
             self.current_word_idx += 1;
         }
 
-        if self.current_word_idx >= self.target_words.len() {
-            self.set_finished();
-        }
+        self.maybe_record_wpm();
     }
 
     pub fn reset(&mut self, new_words: Vec<String>) {
@@ -77,10 +85,54 @@ impl TypingState {
         self.current_word_idx = 0;
         self.started_at = None;
         self.ended_at = None;
+        self.wpm_history.clear();
+        self.last_sample_time = None;
+    }
+
+    pub fn maybe_record_wpm(&mut self) {
+        let Some(start) = self.started_at else {
+            return;
+        };
+
+        if self.is_finished() {
+            return;
+        }
+
+        let now = std::time::Instant::now();
+        let should_record = match self.last_sample_time {
+            Some(last) => (now - last).as_secs() >= 1,
+            None => (now - start).as_secs() >= 1,
+        };
+
+        if should_record {
+            let current_wpm = self.raw_wpm().round() as u64;
+            self.wpm_history.push(current_wpm);
+            self.last_sample_time = Some(now);
+        }
+    }
+
+    pub fn to_input_string(&self) -> String {
+        if self.typed_stuff.is_empty() {
+            return String::new();
+        }
+
+        let max_idx = self
+            .current_word_idx
+            .min(self.typed_stuff.len().saturating_sub(1));
+
+        let active_words = &self.typed_stuff[..=max_idx];
+
+        active_words
+            .iter()
+            .map(|wc| wc.iter().collect::<String>())
+            .collect::<Vec<String>>()
+            .join(" ")
     }
 
     fn set_finished(&mut self) {
         self.ended_at = Some(std::time::Instant::now());
+        let final_wpm = self.raw_wpm().round() as u64;
+        self.wpm_history.push(final_wpm);
     }
 }
 

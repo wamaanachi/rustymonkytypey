@@ -10,6 +10,7 @@ pub struct FinalStats {
     pub time_seconds: f64,
     pub correct_chars: usize,
     pub total_chars: usize,
+    pub wpm_history: Vec<u64>,
 }
 
 impl TypingState {
@@ -27,6 +28,7 @@ impl TypingState {
             time_seconds,
             correct_chars,
             total_chars,
+            wpm_history: self.wpm_history.clone(),
         }
     }
 
