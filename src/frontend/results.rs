@@ -42,9 +42,10 @@ pub fn draw(frame: &mut Frame, theme: &Theme) {
             Correct: {}s\n\
             Incorrect: {}s\n\n\
 \
+            R: review mistakes\n\
             Enter: back to typing\n\
             Esc: quit",
-
+            
             result.wpm,
             result.accuracy,
             result.time,
@@ -58,7 +59,7 @@ pub fn draw(frame: &mut Frame, theme: &Theme) {
         .alignment(Alignment::Center)
         .block(Block::bordered()
             .border_style(Style::default().fg(theme.border))
-            .title("tuipe | results")
+            .title("tuipe | results | R: review | Enter: typing | Esc:  quit")
         );
 
 

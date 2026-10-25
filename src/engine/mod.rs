@@ -10,12 +10,12 @@ pub struct TypingState {
 
 impl TypingState {
     pub fn new(words: Vec<String>) -> Self {
-        let targer_words: Vec<Vec<char>> = words.into_iter().map(|w| w.chars().collect()).collect();
+        let target_words: Vec<Vec<char>> = words.into_iter().map(|w| w.chars().collect()).collect();
 
-        let word_count = targer_words.len();
+        let word_count = target_words.len();
 
         Self {
-            target_words: targer_words,
+            target_words,
             current_word_idx: 0,
             typed_stuff: vec![Vec::new(); word_count],
             started_at: None,
@@ -23,7 +23,7 @@ impl TypingState {
         }
     }
 
-    fn is_finished(&mut self) -> bool {
+    fn is_finished(&self) -> bool {
         if self.ended_at.is_some() {
             return true;
         }
@@ -71,6 +71,14 @@ impl TypingState {
         }
     }
 
+    pub fn reset(&mut self, new_words: Vec<String>) {
+        self.target_words = new_words.into_iter().map(|w| w.chars().collect()).collect();
+        self.typed_stuff = vec![Vec::new(); self.target_words.len()];
+        self.current_word_idx = 0;
+        self.started_at = None;
+        self.ended_at = None;
+    }
+
     fn set_finished(&mut self) {
         self.ended_at = Some(std::time::Instant::now());
     }
@@ -78,6 +86,8 @@ impl TypingState {
 
 #[cfg(test)]
 mod test {
+    use std::time::{Duration, Instant};
+
     use crate::engine::TypingState;
 
     #[test]
@@ -153,5 +163,42 @@ mod test {
         state.on_char('o');
 
         assert!(state.ended_at.is_some());
+    }
+
+    #[test]
+    fn reset_works() {
+        let words = vec!["hello".to_string()];
+        let mut state = TypingState::new(words);
+        let instant = Instant::now();
+
+        state.on_char('h');
+        state.on_char('e');
+        state.on_char('l');
+        state.on_char('l');
+        state.on_char('o');
+
+        state.started_at = Some(instant);
+        state.ended_at = Some(instant + Duration::new(5, 0));
+
+        state.reset(vec!["slop".to_string()]);
+
+        assert_eq!(state.target_words[0], vec!['s', 'l', 'o', 'p']);
+        assert_eq!(state.current_word_idx, 0);
+        assert!(state.started_at.is_none());
+        assert!(state.ended_at.is_none());
+    }
+
+    #[test]
+    fn typing_after_test_does_not_panic_raaah() {
+        let words = vec!["hello".to_string()];
+        let mut state = TypingState::new(words);
+
+        state.on_char('w');
+        state.on_char('0');
+        state.on_char('d');
+
+        state.reset(vec!["world".to_string()]);
+
+        state.on_char('w');
     }
 }

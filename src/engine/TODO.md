@@ -1,6 +1,6 @@
 ## Complete analytics engine
 
-- [] implement raw WPM calculator
+- [x] implement raw WPM calculator
 - [] implement net WPM calculator
 - [] implement Accuracy calculator
 - [] design a final analytics struct

@@ -3,55 +3,66 @@ use ratatui::{
     style::Style,
     widgets::{Block, Paragraph},
     text::Line,
+    layout::{Constraint, Direction, Layout}
 };
-use ratatui::style::Color;
 
-use crate::config::structs::theme::Theme;
-
-pub fn draw(frame: &mut Frame, theme: &Theme, selected: usize) {
-    let text = {
-        let border: Color = theme.border;
-        let correct: Color = theme.correct;
-        let incorrect: Color = theme.incorrect;
-        let untyped: Color = theme.untyped;
-        let caret_bg: Color = theme.caret_background;
-        let caret_txt: Color = theme.caret_text;
-        let text: Color = theme.text;
-        let bg: Color = theme.background;
-
-        // sighs
-        format!("\
-            Border           : {border}\n\
-            Correct          : {correct}\n\
-            Incorrect        : {incorrect}\n\
-            Untyped          : {untyped}\n\
-            Caret background : {caret_bg}\n\
-            Caret text       : {caret_txt}\n\
-            Text             : {text}\n\
-            Background       : {bg}",
-        )
+pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, selected: usize){
+        // umm tryna make it a lil responsive idk if it'll work
+    let direction = if frame.area().width >= 80 {
+        Direction::Horizontal
+    }
+    else {
+        Direction::Vertical
     };
-    // ummn this is to put that > things beofre the options of themes you would be able to choose
-    // yk how it will be used, i aint explaining
+    let areas = Layout::default()
+        .direction(direction)
+        .constraints([
+            Constraint::Percentage(60),
+            Constraint::Percentage(40), // should work now i think
+        ])
+        .split(frame.area());
+    let text = format!(
+        // sighs
+       "Preset: {}\n\
+        Border: {}\n\
+        Correct:  {}\n\
+        Incorrect: {}\n\
+        Untyped: {}\n\
+        Caret background: {}\n\
+        Caret text: {}\n\
+        Text: {}\n\
+        Background: {}",
+        // is this the worst code ever? loll
+        theme.name,
+        theme.border,
+        theme.correct,
+        theme.incorrect,
+        theme.untyped,
+        theme.caret_background,
+        theme.caret_text,
+        theme.text,
+        theme.background,
+    );
+// ummn this is to put that > things beofre the options of themes you would be able to choose
+// yk how it will be used, i aint explaining
 
-    // changed to lines cuz text = text.smth sounds wrong for some reason
-    // and you enumerate lines anyways so
-    let lines: Vec<Line> = text
+    let text: Vec<Line> = text 
         .lines()
         .enumerate()
-        .map(|(index, row)| {
+        .map(|(index, row)|{
             let marker = if index == selected { "> " } else { "  " };
+
             Line::from(format!("{marker}{row}"))
         })
         .collect();
 
-    let widget = Paragraph::new(lines)
+    let widget = Paragraph::new(text)
         .style(Style::default().fg(theme.text).bg(theme.background))
         .block(
             Block::bordered()
                 .border_style(Style::default().fg(theme.border))
                 .title("tuipe | Up/Down: select | Left/Right: colour | Esc: back")
         );
-
-    frame.render_widget(widget, frame.area());
+    frame.render_widget(widget, areas[0]);
+    crate::theme_preview::draw(frame, areas[1], theme);
 }
