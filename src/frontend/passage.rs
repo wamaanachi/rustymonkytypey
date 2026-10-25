@@ -1,19 +1,19 @@
-pub const WORDS: &[&str] = &["umm", "sure", "ig", "lowk", "idk", "what",
-               "to", "put", "here", "just", "a", "lot", "of",
-               "random", "words", "lol", "blue", "is", "really",
-               "cool", "i", "am", "gonna", "stop", "now",
-               "i", "want", "it", "that", "way", "tell","me",
-               "why", "aint", "nothing", "but", "a", "heartache",
-               "mistake", "never", "hear", "say", "hackatime", "is", "bad",
-               "bruhh", "working", "or", "nah", "acting", "weird"];
-
-// we need like 43 - 45 words 
-// but ill add more words in the future
-
 use rand::seq::SliceRandom;
 
 pub fn show_passage() -> String{
-    let mut words = WORDS.to_vec();
+    
+    let json = include_str!("../../data/english.json");
+    // its the json reader that i js added
+    let data: serde_json::Value = 
+        serde_json::from_str(json).expect("Wrong json");
+
+    let mut words: Vec<&str> = data["words"]
+        .as_array()
+        .expect("word array missing")
+        .iter()
+        .map(|word| word.as_str().expect("word isnt a text ig"))
+        .collect();
+
     words.shuffle(&mut rand::rng());
     words.truncate(25);
 
