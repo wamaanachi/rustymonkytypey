@@ -6,6 +6,8 @@ pub struct TypingState {
     pub typed_stuff: Vec<Vec<char>>,  //stuff typed by user
     pub started_at: Option<std::time::Instant>,
     pub ended_at: Option<std::time::Instant>,
+    pub wpm_history: Vec<u64>,
+    pub last_sample_time: Option<std::time::Instant>,
 }
 
 impl TypingState {
@@ -20,6 +22,8 @@ impl TypingState {
             typed_stuff: vec![Vec::new(); word_count],
             started_at: None,
             ended_at: None,
+            wpm_history: Vec::new(),
+            last_sample_time: None,
         }
     }
 
@@ -41,6 +45,7 @@ impl TypingState {
         let reached_end = self.typed_stuff[self.current_word_idx].len()
             >= self.target_words[self.current_word_idx].len();
 
+        self.maybe_record_wpm();
         if is_last_word && reached_end {
             self.set_finished();
         }
@@ -70,6 +75,8 @@ impl TypingState {
         if !self.typed_stuff[self.current_word_idx].is_empty() {
             self.current_word_idx += 1;
         }
+
+        self.maybe_record_wpm();
     }
 
     pub fn reset(&mut self, new_words: Vec<String>) {
@@ -78,6 +85,30 @@ impl TypingState {
         self.current_word_idx = 0;
         self.started_at = None;
         self.ended_at = None;
+        self.wpm_history.clear();
+        self.last_sample_time = None;
+    }
+
+    pub fn maybe_record_wpm(&mut self) {
+        let Some(start) = self.started_at else {
+            return;
+        };
+
+        if self.is_finished() {
+            return;
+        }
+
+        let now = std::time::Instant::now();
+        let should_record = match self.last_sample_time {
+            Some(last) => (now - last).as_secs() >= 1,
+            None => (now - start).as_secs() >= 1,
+        };
+
+        if should_record {
+            let current_wpm = self.raw_wpm().round() as u64;
+            self.wpm_history.push(current_wpm);
+            self.last_sample_time = Some(now);
+        }
     }
 
     pub fn to_input_string(&self) -> String {
@@ -100,6 +131,8 @@ impl TypingState {
 
     fn set_finished(&mut self) {
         self.ended_at = Some(std::time::Instant::now());
+        let final_wpm = self.raw_wpm().round() as u64;
+        self.wpm_history.push(final_wpm);
     }
 }
 
