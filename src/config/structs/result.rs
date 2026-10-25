@@ -8,7 +8,29 @@ pub(crate) struct Result {
     pub(crate) metadata  : Metadata
 }
 
+impl Result {
+    pub(crate) fn new(wpm: f32, accuracy: f32, time: f32, correct: usize, incorrect: usize, metadata: Metadata) -> Self {
+        Self {
+            wpm, accuracy, time, correct, incorrect, metadata
+        }
+    }
 
+    pub(crate) fn default() -> Self {
+        let wpm: f32 = 0.0;
+        let accuracy: f32 = 0.0;
+        let time: f32 = 0.0;
+        let correct: usize = 0;
+        let incorrect: usize = 0;
+        let metadata: Metadata = Metadata::default();
+
+        Self {
+            wpm, accuracy, time, correct, incorrect, metadata
+        }
+    }
+}
+
+
+#[derive(Default, Clone)]
 pub(crate) struct Metadata {
     pub(crate) time: String,
     pub(crate) words: Vec<String>,
