@@ -61,7 +61,7 @@ pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, sel
         .block(
             Block::bordered()
                 .border_style(Style::default().fg(theme.border))
-                .title("tuipe | Up/Down: select | Left/Right: colour | D: reset | Esc: back")
+                .title("tuipe | Up/Down: select | Left/Right: colour | Esc: back")
         );
     frame.render_widget(widget, areas[0]);
     crate::theme_preview::draw(frame, areas[1], theme);
