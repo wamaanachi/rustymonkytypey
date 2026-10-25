@@ -3,7 +3,10 @@ use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use std::io;
 
 pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
-    let mut passage = crate::frontend::passage::show_passage();
+    let mut selected_count: usize = 1;
+    let mut started = false;
+    let mut passage =
+        crate::frontend::passage::show_passage(crate::word_options::COUNTS[selected_count]);
 
     let words: Vec<String> = passage.split_whitespace().map(|s| s.to_string()).collect();
     let mut state = TypingState::new(words);
@@ -50,16 +53,31 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                         return Ok(());
                     }
                 }
-                KeyCode::Tab | KeyCode::Enter if is_finished && !show_themes && !show_review => {
-                    passage = crate::frontend::passage::show_passage();
+                KeyCode::Tab if !show_themes => {
+                    passage = crate::frontend::passage::show_passage(
+                        crate::word_options::COUNTS[selected_count],
+                    );
                     let new_words: Vec<String> =
                         passage.split_whitespace().map(|s| s.to_string()).collect();
                     state.reset(new_words);
+                    started = false;
+                    show_review = false;
+                }
+                KeyCode::Enter if is_finished && !show_themes && !show_review => {
+                    passage = crate::frontend::passage::show_passage(
+                        crate::word_options::COUNTS[selected_count],
+                    );
+                    let new_words: Vec<String> =
+                        passage.split_whitespace().map(|s| s.to_string()).collect();
+                    state.reset(new_words);
+                    started = false;
                 }
                 KeyCode::Char(' ') if !is_finished && !show_themes => {
+                    started = true;
                     state.on_space();
                 }
                 KeyCode::Char(c) if !is_finished && !show_themes => {
+                    started = true;
                     state.on_char(c);
                 }
                 KeyCode::Backspace if !is_finished && !show_themes => {
@@ -69,9 +87,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                 }
                 // cause we gonna let them like go up n down in the themes page
                 KeyCode::Up if show_themes => {
-                    if selected_theme > 0 {
-                        selected_theme -= 1;
-                    }
+                    selected_theme = selected_theme.saturating_sub(1);
                 }
                 KeyCode::Down if show_themes => {
                     if selected_theme < 8 {
@@ -103,10 +119,25 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                         theme.name = "Custom";
                     }
                 }
+                KeyCode::Left | KeyCode::Right
+                    if !show_themes && !is_finished && !show_review && !started =>
+                {
+                    if key.code == KeyCode::Left {
+                        selected_count = selected_count.saturating_sub(1);
+                    } else {
+                        selected_count = (selected_count + 1).min(3);
+                    }
+
+                    passage = crate::frontend::passage::show_passage(
+                        crate::word_options::COUNTS[selected_count],
+                    );
+                    let new_words: Vec<String> =
+                        passage.split_whitespace().map(|s| s.to_string()).collect();
+                    state.reset(new_words);
+                }
                 _ => {}
             }
         }
     }
 }
 // thinkinh.thinking since so longg bruhhhh
-
