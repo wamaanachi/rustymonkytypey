@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use ratatui::style::Color;
 use serde::{ Serialize, Deserialize };
 
@@ -5,15 +6,15 @@ use serde::{ Serialize, Deserialize };
 #[derive(Debug, Clone)]
 pub struct Theme {
     // gonna be br making a lot of options
-    pub border: Color,
-    pub correct: Color,
-    pub incorrect: Color,
-    pub untyped: Color,
-    pub caret_background: Color,
-    pub caret_text: Color,
-    pub text: Color,
-    pub background: Color,
-    pub name: &'static str,
+    pub name             : &'static str,
+    pub border           : Color,
+    pub correct          : Color,
+    pub incorrect        : Color,
+    pub untyped          : Color,
+    pub caret_background : Color,
+    pub caret_text       : Color,
+    pub text             : Color,
+    pub background       : Color,
     // might add more idk
 }
 
@@ -22,6 +23,7 @@ impl Theme {
     pub fn default() -> Self {
         Self {
             // these are the colors i already had lol
+            name: "Default",
             border: Color::White,
             correct: Color::Green,
             incorrect: Color::Red,
@@ -30,7 +32,6 @@ impl Theme {
             caret_text: Color::Black,
             text: Color::White,
             background: Color::Black,
-            name: "Default",
         }
     }
 
