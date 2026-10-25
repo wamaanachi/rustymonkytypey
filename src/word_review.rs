@@ -26,6 +26,18 @@ pub fn find_mistakes(passage: &str, input: &str) -> Vec<(String, String)>{
     mistakes
 }
 
+// so this would take all the words that you got wrong and place them in a new page when you would be able to re-type them. lowk this aint even importnt
+pub fn practice_words(passage: &str, input: &str) -> Vec<String>{
+    let mistakes = find_mistakes(passage, input);
+    let mut words = Vec::new();
+
+    for (expected, _) in mistakes {
+        if !words.contains(&expected){
+            words.push(expected);
+        }
+    }
+    words
+}
 pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, passage: &str, input: &str, state: &mut TableState,){
   
     let mistakes = find_mistakes(passage, input);
@@ -59,7 +71,7 @@ let widget = Table::new(rows, widths)
     .block(
         Block::bordered()
             .border_style(Style::default().fg(theme.border))
-                    .title(format!("tuipe | {position}/{total} mistake | Up/Down: scroll | Esc: results"))
+                    .title(format!("tuipe | {position}/{total} mistake | P: practise | Up/Down: scroll | Esc: results"))
             );
             frame.render_stateful_widget(widget, frame.area(), state);
 }

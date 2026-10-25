@@ -88,6 +88,21 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                     state.reset(new_words);
                     started = false;
                 }
+                // this is for the new thing i wrote in word_review which puts all the incorrectly spelt words together in a block, so yo could type them again and practice ig lol
+                KeyCode::Char('p') if show_review => {
+                    let input = state.to_input_string();
+                    let words = crate::word_review::practice_words(&passage, &input);
+
+                    if !words.is_empty(){
+                        passage = words.join(" ");
+
+                        state.reset(words);
+                        review_state = TableState::default();
+                        show_review = false;
+
+                        started = true;
+                    }
+                }
                 KeyCode::Char(' ') if !is_finished && !show_themes => {
                     started = true;
                     state.on_space();
@@ -172,4 +187,3 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
         }
     }
 }
-// thinkinh.thinking since so longg bruhhhh
