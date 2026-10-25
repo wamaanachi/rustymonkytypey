@@ -1,11 +1,9 @@
 use rand::seq::SliceRandom;
 
-pub fn show_passage(count: usize) -> String{
-    
+pub fn show_passage(count: usize) -> String {
     let json = include_str!("../../data/english.json");
     // its the json reader that i js added
-    let data: serde_json::Value = 
-        serde_json::from_str(json).expect("Wrong json");
+    let data: serde_json::Value = serde_json::from_str(json).expect("Wrong json");
 
     let mut words: Vec<&str> = data["words"]
         .as_array()
@@ -22,8 +20,10 @@ pub fn show_passage(count: usize) -> String{
 
     let words_per_line = words.len().div_ceil(3);
 
-    words.chunks(words_per_line)
+    words
+        .chunks(words_per_line)
         .map(|line| line.join(" "))
         .collect::<Vec<_>>()
         .join("\n")
 }
+
