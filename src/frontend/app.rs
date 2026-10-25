@@ -1,6 +1,7 @@
 use std::io;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use crate::config::structs::theme::Theme;
+use ratatui::widgets::TableState;
 
 pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
 
@@ -15,6 +16,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
     let mut show_themes = false;
     let mut theme = Theme::default();
     let mut selected_theme = 0;
+    let mut review_state = TableState::default();
 
     loop {
         terminal.draw(|frame| {
@@ -22,7 +24,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                 crate::design::theme::helper::draw(frame, &theme, selected_theme);
             } 
             else if show_review{
-                crate::word_review::draw(frame, &theme, &passage, &input);
+                crate::word_review::draw(frame, &theme, &passage, &input, &mut review_state,);
             }
             else if show_results {
                 crate::frontend::results::draw(frame, &theme);
