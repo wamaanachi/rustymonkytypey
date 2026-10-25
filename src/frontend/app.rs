@@ -107,6 +107,9 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                     started = true;
                     state.on_space();
                 }
+                KeyCode::Char('d') if show_themes => {
+                    theme = Theme::default();
+                }
                 KeyCode::Char(c) if !is_finished && !show_themes => {
                     started = true;
                     state.on_char(c);
