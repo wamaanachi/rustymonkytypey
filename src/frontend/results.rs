@@ -4,7 +4,9 @@ use ratatui::{
     Frame,
     layout::{Alignment, Constraint, Layout},
     style::Style,
-    widgets::{Block, Paragraph, Sparkline},
+    symbols::Marker,
+    text::Line,
+    widgets::{Axis, Block, Chart, Dataset, Paragraph},
 };
 
 use crate::engine::analytics::FinalStats;
@@ -34,8 +36,8 @@ pub fn draw(frame: &mut Frame, theme: &Theme, stats: &FinalStats) {
     //|  |                        |   |
     let vertical = Layout::vertical([
         Constraint::Fill(1),
-        Constraint::Length(13),
-        Constraint::Length(7),
+        Constraint::Length(12),
+        Constraint::Length(11),
         Constraint::Fill(1),
     ])
     .split(center_area);
@@ -63,31 +65,66 @@ pub fn draw(frame: &mut Frame, theme: &Theme, stats: &FinalStats) {
                 .title("tuipe | results | R: review | Enter: typing | Esc:  quit"),
         );
 
-    let max_wpm = stats.wpm_history.iter().copied().max().unwrap_or(0);
-    let min_wpm = stats.wpm_history.iter().copied().min().unwrap_or(0);
+    let chart_data: Vec<(f64, f64)> = stats
+        .wpm_history
+        .iter()
+        .enumerate()
+        .map(|(i, &wpm)| ((i + 1) as f64, wpm as f64))
+        .collect();
+
+    let max_wpm = stats.wpm_history.iter().copied().max().unwrap_or(0) as f64;
+    let min_wpm = stats.wpm_history.iter().copied().min().unwrap_or(0) as f64;
+    let total_time = stats.time_seconds.max(1.0);
+
+    let x_bounds = [0.0, total_time];
+    let mid_time = total_time / 2.0;
+
+    let y_max = (max_wpm * 1.15).max(40.0);
+    let y_bounds = [0.0, y_max];
+    let y_mid = y_max / 2.0;
+
+    let dataset = Dataset::default()
+        .name("wpm")
+        .marker(Marker::Braille)
+        .graph_type(ratatui::widgets::GraphType::Line)
+        .style(Style::default().fg(theme.correct))
+        .data(&chart_data);
 
     let graph_title = format!(
         "wpm over time | peak: {} | min: {} | avg: {:.0}",
         max_wpm, min_wpm, stats.net_wpm
     );
 
-    //this is so that the maximum of the barchart does not touch the top border
-    let max_headroom = if max_wpm > 0 {
-        max_wpm + { max_wpm / 10 }.max(5)
-    } else {
-        100
-    };
-
-    let sparkline_wid = Sparkline::default()
+    let chart_widget = Chart::new(vec![dataset])
         .block(
             Block::bordered()
                 .border_style(Style::default().fg(theme.border))
                 .title(graph_title),
         )
-        .data(&stats.wpm_history)
-        .max(max_headroom)
-        .style(Style::default().fg(theme.correct).bg(theme.background));
+        .x_axis(
+            Axis::default()
+                .title(" time ")
+                .style(Style::default().fg(theme.untyped))
+                .bounds(x_bounds)
+                .labels(vec![
+                    Line::from("0s"),
+                    Line::from(format!("{:.0}s", mid_time)),
+                    Line::from(format!("{:.0}s", total_time)),
+                ]),
+        )
+        .y_axis(
+            Axis::default()
+                .title(" wpm ")
+                .style(Style::default().fg(theme.untyped))
+                .bounds(y_bounds)
+                .labels(vec![
+                    Line::from("0"),
+                    Line::from(format!("{:.0}", y_mid)),
+                    Line::from(format!("{:.0}", y_max)),
+                ]),
+        );
 
+    //this is so that the maximum of the barchart does not touch the top border
     frame.render_widget(summary_widget, vertical[0]);
-    frame.render_widget(sparkline_wid, vertical[1]);
+    frame.render_widget(chart_widget, vertical[1]);
 }
