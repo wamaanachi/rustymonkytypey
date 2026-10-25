@@ -33,24 +33,23 @@ pub fn draw(frame: &mut Frame, theme: &Theme) {
 
     let text: String = {
         format!("\
-            Test Complete!\n\n\
-\
-            wpm: {}\n\
-            accuracy: {}%\n\n\
-\
-            Time: {}s\n\
-            Correct: {}s\n\
-            Incorrect: {}s\n\n\
-\
-            R: review mistakes\n\
-            Enter: back to typing\n\
-            Esc: quit",
-            
-            result.wpm,
-            result.accuracy,
-            result.time,
-            result.correct,
-            result.incorrect
+                Test Complete!\n\n\
+                \
+                wpm: {}\n\
+                accuracy: {}%\n\n\
+                \
+                Time: {}s\n\
+                Correct: {}s\n\
+                Incorrect: {}s\n\n\
+                \
+                R: review mistakes\n\
+                Enter: back to typing\n\
+                Esc: quit",
+                result.wpm,
+                result.accuracy,
+                result.time,
+                result.correct,
+                result.incorrect
         )
     };
 

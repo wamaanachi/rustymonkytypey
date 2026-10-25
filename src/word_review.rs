@@ -7,14 +7,14 @@ use ratatui::{
     widgets::{Block, Cell, Row, Table},
 };
 
-pub fn find_mistakes(passage: &str, input: &str) -> Vec<(String, String)>{
+pub fn find_mistakes(passage: &str, input: &str) -> Vec<(String, String)> {
     let expected: Vec<&str> = passage.split_whitespace().collect();
     let typed: Vec<&str> = input.split_whitespace().collect();
 
     let mut mistakes = Vec::new();
 
-    for (index, actual) in typed.iter().enumerate(){
-        if let Some(target) = expected.get(index){
+    for (index, actual) in typed.iter().enumerate() {
+        if let Some(target) = expected.get(index) {
             if *target != *actual {
                 mistakes.push((
                     target.to_string(),
@@ -26,8 +26,7 @@ pub fn find_mistakes(passage: &str, input: &str) -> Vec<(String, String)>{
     mistakes
 }
 
-pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, passage: &str, input: &str,){
-  
+pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, passage: &str, input: &str,) {
     let mistakes = find_mistakes(passage, input);
     let mut rows = Vec::new();
 
@@ -40,23 +39,23 @@ pub fn draw(frame: &mut Frame, theme: &crate::config::structs::theme::Theme, pas
         ]));
     }
 
-if rows.is_empty(){
-    rows.push(Row::new(["lowk no mistakes", ""]));
-}
+    if rows.is_empty() {
+        rows.push(Row::new(["lowk no mistakes", ""]));
+    }
 
-let widths = [
-    Constraint::Percentage(50),
-    Constraint::Percentage(50),
-];
+    let widths = [
+        Constraint::Percentage(50),
+        Constraint::Percentage(50),
+    ];
 
-let widget = Table::new(rows, widths)
-    .header(Row::new(["Expected", "You typed"]).bottom_margin(1))
-    .column_spacing(2)
-    .style(Style::default().fg(theme.text).bg(theme.background))
-    .block(
-        Block::bordered()
-            .border_style(Style::default().fg(theme.border))
-                    .title("tuipe | mistake review | Esc: results")
-            );
-            frame.render_widget(widget, frame.area());
+    let widget = Table::new(rows, widths)
+        .header(Row::new(["Expected", "You typed"]).bottom_margin(1))
+        .column_spacing(2)
+        .style(Style::default().fg(theme.text).bg(theme.background))
+        .block(
+            Block::bordered()
+                .border_style(Style::default().fg(theme.border))
+                .title("tuipe | mistake review | Esc: results")
+        );
+    frame.render_widget(widget, frame.area());
 }
