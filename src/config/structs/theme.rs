@@ -46,6 +46,20 @@ impl Theme {
             background: Color::Rgb(40, 40, 40),
         }
     }
+        // another preset theme cuz why not, got these rgb's too off the internet
+    pub fn dracula() -> Self {
+        Self {
+            name: "Dracula",
+            border: Color::Rgb(189, 147, 249),
+            correct: Color::Rgb(80, 250, 123),
+            incorrect: Color::Rgb(255, 85, 85),
+            untyped: Color::Rgb(98, 114, 164),
+            caret_background: Color::Rgb(255, 121, 198),
+            caret_text: Color::Rgb(40, 42, 54),
+            text: Color::Rgb(248, 248, 242),
+            background: Color::Rgb(40, 42, 54),
+        }
+    }
 }
 
 pub fn change_color(color: &mut Color, forward: bool){
