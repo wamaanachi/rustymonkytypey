@@ -1,3 +1,6 @@
+use std::time;
+
+#[derive(Default, Clone)]
 pub(crate) struct Result {
     pub(crate) wpm       : f32,
     pub(crate) accuracy  : f32,
@@ -32,10 +35,10 @@ impl Result {
 
 #[derive(Default, Clone)]
 pub(crate) struct Metadata {
-    pub(crate) time: String,
-    pub(crate) words: Vec<String>,
+    pub time: String,
+    pub words: Vec<String>,
 
-    pub(crate) theme: Option<String>,
+    pub theme: Option<String>,
 }
 
 impl Metadata {
