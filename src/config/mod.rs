@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use directories::BaseDirs;
 
 pub(crate) const GROUP_NAME: &str = "Wamaanachi";
-pub(crate) const APP_NAME: &str = "RustyMonkeyTypey";
+pub(crate) const APP_NAME: &str = "Tuipe";
 
 
 fn get_base_dir() -> Result<BaseDirs, u8> {
