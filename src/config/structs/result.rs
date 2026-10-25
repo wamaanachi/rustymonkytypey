@@ -17,7 +17,7 @@ pub(crate) struct Metadata {
 }
 
 impl Metadata {
-    pub(crate) fn default(self) -> Self {
+    pub(crate) fn default() -> Self {
         let time: String;
 
         let time_since_epoch = time::SystemTime::now().duration_since(time::SystemTime::UNIX_EPOCH);
