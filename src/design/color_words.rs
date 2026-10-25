@@ -16,12 +16,24 @@ pub fn passage_line(passage: &str, input: &str, theme: Theme) -> Text<'static> {
     // bruhh thisa shi is real weird
     for expected in passage.chars() {
         if expected == '\n' {
+            let is_untyped = typed.as_str().is_empty();
+            let is_space = typed.clone().next() == Some(' ') || typed.clone().next() == Some('\n');
+
+            let mut style = if is_space {
+                typed.next();
+                Style::default().fg(theme.correct)
+            } else {
+                Style::default().fg(theme.untyped)
+            };
+
+            if is_untyped && !caret_shown {
+                style = style.bg(theme.caret_background).fg(theme.caret_text);
+                caret_shown = true;
+            }
+
+            letters.push(Span::styled(" ", style));
             lines.push(Line::from(letters));
             letters = Vec::new();
-
-            if typed.clone().next() == Some(' ') || typed.clone().next() == Some('\n') {
-                typed.next();
-            }
 
             continue;
         }
