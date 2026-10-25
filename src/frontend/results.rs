@@ -21,6 +21,7 @@ pub fn draw(frame: &mut Frame, theme: &Theme) {
             Correct: 43
             Incorrect: 367
 
+            R: review mistakes
             Enter: back to typing
             Esc: quit";
 

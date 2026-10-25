@@ -7,6 +7,7 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
 
     let mut input = String::new();
     let mut show_results = false;
+    let mut show_review = false;
     let mut show_themes = false;
     let mut theme = Theme::default();
     let mut selected_theme = 0;
@@ -15,7 +16,11 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
         terminal.draw(|frame| {
             if show_themes {
                 crate::design::theme::helper::draw(frame, &theme, selected_theme);
-            } else if show_results {
+            } 
+            else if show_review{
+                crate::word_review::draw(frame, &theme, &passage, &input);
+            }
+            else if show_results {
                 crate::frontend::results::draw(frame, &theme);
             } else {
                 crate::frontend::ui::draw(frame, &passage, &input, &theme);
@@ -28,17 +33,23 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
 
         if key.kind == KeyEventKind::Press {
             match key.code {
-                KeyCode::F(2) => {
+                KeyCode::F(2) if !show_review => {
                     show_themes = !show_themes;
                 }
+                KeyCode::Char('r') if show_results && !show_themes => {
+                    show_review = !show_review;
+                }
                 KeyCode::Esc => {
-                    if show_themes {
+                    if show_review {
+                        show_review = false;
+                    }
+                    else if show_themes {
                         show_themes = false;
                     } else {
                         return Ok(());
                     }
                 }
-                KeyCode::Enter if !show_themes => {
+                KeyCode::Enter if !show_themes && !show_review => {
                     show_results = !show_results;
                 }
                 KeyCode::Char(c) if !show_results && !show_themes => {
@@ -91,3 +102,4 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
         }
     }
 }
+// thinkinh.thinking since so longg bruhhhh
