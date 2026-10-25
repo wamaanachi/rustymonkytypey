@@ -189,6 +189,21 @@ pub fn run(terminal: &mut ratatui::DefaultTerminal) -> io::Result<()> {
                         }
                     }
                 }
+
+                KeyCode::Home if show_review => {
+                    if review_state.selected().is_some(){
+                        review_state.select(Some(0));
+                    }
+                }
+
+                KeyCode::End if show_review => {
+                    let input = state.to_input_string();
+                    let total = crate::word_review::find_mistakes(&passage, &input).len();
+
+                    if total > 0 {
+                        review_state.select(Some(total - 1));
+                    }
+                }
                 _ => {}
             }
         }
