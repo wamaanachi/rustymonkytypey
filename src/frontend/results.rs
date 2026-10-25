@@ -2,7 +2,7 @@ use crate::config::structs::theme::Theme;
 
 use ratatui::{
     Frame,
-    layout::{Alignment, Constraint, Layout},
+    layout::{Alignment, Constraint, Flex, Layout},
     style::Style,
     symbols::Marker,
     text::Line,
@@ -16,14 +16,11 @@ pub fn draw(frame: &mut Frame, theme: &Theme, stats: &FinalStats) {
     let incorrect_chars = stats.total_chars.saturating_sub(stats.correct_chars);
 
     // |  |                    |   |
-    let horizontal = Layout::horizontal([
-        Constraint::Fill(1),
-        Constraint::Length(86),
-        Constraint::Fill(1),
-    ])
-    .split(frame.area());
+    let horizontal = Layout::horizontal([Constraint::Length(86)])
+        .flex(Flex::Center)
+        .split(frame.area());
 
-    let center_area = horizontal[1];
+    let center_area = horizontal[0];
 
     //I hope you see the vision
     //|  |                       |  |
@@ -34,13 +31,9 @@ pub fn draw(frame: &mut Frame, theme: &Theme, stats: &FinalStats) {
     //|  |                        |   |
     //|  |------------------------|  |
     //|  |                        |   |
-    let vertical = Layout::vertical([
-        Constraint::Fill(1),
-        Constraint::Length(12),
-        Constraint::Length(11),
-        Constraint::Fill(1),
-    ])
-    .split(center_area);
+    let vertical = Layout::vertical([Constraint::Length(11), Constraint::Length(12)])
+        .flex(Flex::Center)
+        .split(center_area);
 
     let text = format!(
         "\n\
@@ -57,7 +50,7 @@ pub fn draw(frame: &mut Frame, theme: &Theme, stats: &FinalStats) {
     );
 
     let summary_widget = Paragraph::new(text)
-        .style(Style::default().fg(theme.text).bg(theme.background))
+        .style(Style::default().fg(theme.text))
         .alignment(Alignment::Center)
         .block(
             Block::bordered()
